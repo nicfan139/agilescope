@@ -10,102 +10,106 @@ dotenv.config();
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY as string;
 
 const AuthController = {
-  login: async (req: Request, res: Response) => {
-    const user = await User.findOne({ email: req.body.email });
+	login: async (req: Request, res: Response) => {
+		const user = await User.findOne({ email: req.body.email });
 
-    if (user) {
-      bcrypt.compare(req.body.password, user.password, async (err, result) => {
-        if (err) {
-          res.status(401).json({
-            message: 'Authentication failed'
-          });
-        }
+		if (user) {
+			bcrypt.compare(req.body.password, user.password, async (err, result) => {
+				if (err) {
+					res.status(401).json({
+						message: 'Authentication failed'
+					});
+				}
 
-        if (result) {
-          if (user.otpEnabled) {
-            const secret = speakeasy.generateSecret().base32;
-            const otp = speakeasy.totp({
-              secret,
-              encoding: 'base32',
-              step: 300
-            });
+				if (result) {
+					if (user.otpEnabled) {
+						const secret = speakeasy.generateSecret().base32;
+						const otp = speakeasy.totp({
+							secret,
+							encoding: 'base32',
+							step: 300
+						});
 
-            await User.findByIdAndUpdate(user.id, { otpSecret: secret }, { returnDocument: 'after' })
+						await User.findByIdAndUpdate(
+							user.id,
+							{ otpSecret: secret },
+							{ returnDocument: 'after' }
+						);
 
-            await sendEmail({ to: user.email, type: 'otp', payload: otp })
-          }
+						await sendEmail({ to: user.email, type: 'otp', payload: otp });
+					}
 
-          const token = jwt.sign(
-            {
-              id: user._id
-            },
-            JWT_SECRET_KEY,
-            {
-              expiresIn: '1h'
-            }
-          );
-          res.status(200).json({
-            message: 'Authentication successful',
-            token: token,
-            otpEnabled: user.otpEnabled
-          });
-        } else {
-          res.status(401).json({
-            message: 'Authentication failed'
-          });
-        }
-      });
-    } else {
-      res.status(401).json({
-        message: 'Authorization failed'
-      });
-    }
-  },
+					const token = jwt.sign(
+						{
+							id: user._id
+						},
+						JWT_SECRET_KEY,
+						{
+							expiresIn: '1h'
+						}
+					);
+					res.status(200).json({
+						message: 'Authentication successful',
+						token: token,
+						otpEnabled: user.otpEnabled
+					});
+				} else {
+					res.status(401).json({
+						message: 'Authentication failed'
+					});
+				}
+			});
+		} else {
+			res.status(401).json({
+				message: 'Authorization failed'
+			});
+		}
+	},
 
-  verifyEmail: async (req: Request, res: Response) => {
-  	const { verifyEmailToken } = req.body;
+	verifyEmail: async (req: Request, res: Response) => {
+		const { verifyEmailToken } = req.body;
 
-      const user = await User.findOne({ verifyEmailToken }).exec();
+		const user = await User.findOne({ verifyEmailToken }).exec();
 
-      if (user) {
-        if (user.verified) {
-          res.status(400).json({
-            isVerified: true,
-            errorMessage: 'User has already been verified'
-          });
-        } else {
-          const updatedUser = await User.findOneAndUpdate(
-            { verifyEmailToken },
-            { verified: true, verifyEmailToken: null },
-            { returnDocument: 'after' }
-          )
+		if (user) {
+			if (user.verified) {
+				res.status(400).json({
+					isVerified: true,
+					errorMessage: 'User has already been verified'
+				});
+			} else {
+				const updatedUser = await User.findOneAndUpdate(
+					{ verifyEmailToken },
+					{ verified: true, verifyEmailToken: null },
+					{ returnDocument: 'after' }
+				);
 
-          res.status(201).json({
-            isVerified: true,
-            user: updatedUser
-          });
-        }
-      } else {
-        res.status(500).json({
-          isVerified: false,
-          errorMessage: 'Verify token invalid'
-        });
-      }
-  },
+				res.status(201).json({
+					isVerified: true,
+					user: updatedUser
+				});
+			}
+		} else {
+			res.status(500).json({
+				isVerified: false,
+				errorMessage: 'Verify token invalid'
+			});
+		}
+	},
 
-  validateOtp: async (req: Request, res: Response) => {
-    const { accessToken, otp } = req.body;
+	validateOtp: async (req: Request, res: Response) => {
+		const { accessToken, otp } = req.body;
 
-    let jwtPayload;
-    try {
-      jwtPayload = jwt.verify(accessToken, JWT_SECRET_KEY) as JwtPayload;
-    } catch (error) {
-      console.log(error);
-    }
+		let jwtPayload;
+		try {
+			jwtPayload = jwt.verify(accessToken, JWT_SECRET_KEY) as JwtPayload;
+		} catch (error) {
+			console.log(error);
+		}
 
-    if (jwtPayload) {
-      const user = await User.findOne({ _id: jwtPayload.id });
-      if (user) {
+		if (jwtPayload) {
+			const user = await User.findOne({ _id: jwtPayload.id });
+			if (user) {
 				const tokenIsValid = speakeasy.totp.verify({
 					secret: user.otpSecret as string,
 					encoding: 'base32',
@@ -114,7 +118,7 @@ const AuthController = {
 				});
 
 				if (tokenIsValid) {
-					await User.findByIdAndUpdate(user.id, { otpSecret: null }, { returnDocument: 'after' })
+					await User.findByIdAndUpdate(user.id, { otpSecret: null }, { returnDocument: 'after' });
 
 					res.status(201).json({
 						otpValid: true
@@ -125,53 +129,53 @@ const AuthController = {
 						errorMessage: 'Unable to validate one-time password'
 					});
 				}
-      } else {
-        res.status(500).json({
-          isTokenValid: false,
-          errorMessage: 'Unable to extract user details with the provided access token'
-        });
-      }
-    } else {
-      res.status(400).json({
-        isTokenValid: false,
-        errorMessage: 'Invalid or expired access token'
-      });
-    }
-  },
+			} else {
+				res.status(500).json({
+					isTokenValid: false,
+					errorMessage: 'Unable to extract user details with the provided access token'
+				});
+			}
+		} else {
+			res.status(400).json({
+				isTokenValid: false,
+				errorMessage: 'Invalid or expired access token'
+			});
+		}
+	},
 
-  validateToken: async (req: Request, res: Response) => {
-    const { accessToken } = req.body;
+	validateToken: async (req: Request, res: Response) => {
+		const { accessToken } = req.body;
 
-    let jwtPayload;
-    try {
-      jwtPayload = jwt.verify(accessToken, JWT_SECRET_KEY) as JwtPayload;
-    } catch (error) {
-      console.log(error);
-    }
+		let jwtPayload;
+		try {
+			jwtPayload = jwt.verify(accessToken, JWT_SECRET_KEY) as JwtPayload;
+		} catch (error) {
+			console.log(error);
+		}
 
-    if (jwtPayload) {
-      const user = await User.findOne({ _id: jwtPayload.id });
-      if (user) {
-        res.status(200).json({
-          isTokenValid: true,
-          user: {
-            _id: user._id,
-            email: user.email
-          }
-        });
-      } else {
-        res.status(500).json({
-          isTokenValid: false,
-          errorMessage: 'Unable to extract user details with the provided access token'
-        });
-      }
-    } else {
-      res.status(400).json({
-        isTokenValid: false,
-        errorMessage: 'Invalid or expired access token'
-      });
-    }
-  }
-}
+		if (jwtPayload) {
+			const user = await User.findOne({ _id: jwtPayload.id });
+			if (user) {
+				res.status(200).json({
+					isTokenValid: true,
+					user: {
+						_id: user._id,
+						email: user.email
+					}
+				});
+			} else {
+				res.status(500).json({
+					isTokenValid: false,
+					errorMessage: 'Unable to extract user details with the provided access token'
+				});
+			}
+		} else {
+			res.status(400).json({
+				isTokenValid: false,
+				errorMessage: 'Invalid or expired access token'
+			});
+		}
+	}
+};
 
 export default AuthController;
