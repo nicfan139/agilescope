@@ -105,6 +105,10 @@ const AuthController = {
 			jwtPayload = jwt.verify(accessToken, JWT_SECRET_KEY) as JwtPayload;
 		} catch (error) {
 			console.log(error);
+			res.status(500).json({
+				otpValid: false,
+				errorMessage: 'Unable to verify access token'
+			});
 		}
 
 		if (jwtPayload) {
@@ -131,48 +135,32 @@ const AuthController = {
 				}
 			} else {
 				res.status(500).json({
-					isTokenValid: false,
+					otpValid: false,
 					errorMessage: 'Unable to extract user details with the provided access token'
 				});
 			}
 		} else {
 			res.status(400).json({
-				isTokenValid: false,
+				otpValid: false,
 				errorMessage: 'Invalid or expired access token'
 			});
 		}
 	},
 
-	validateToken: async (req: Request, res: Response) => {
-		const { accessToken } = req.body;
-
-		let jwtPayload;
-		try {
-			jwtPayload = jwt.verify(accessToken, JWT_SECRET_KEY) as JwtPayload;
-		} catch (error) {
-			console.log(error);
-		}
-
-		if (jwtPayload) {
-			const user = await User.findOne({ _id: jwtPayload.id });
-			if (user) {
-				res.status(200).json({
-					isTokenValid: true,
-					user: {
-						_id: user._id,
-						email: user.email
-					}
-				});
-			} else {
-				res.status(500).json({
-					isTokenValid: false,
-					errorMessage: 'Unable to extract user details with the provided access token'
-				});
-			}
+	validateToken: async (_req: Request, res: Response) => {
+		const user = await User.findOne({ _id: res.locals.userId });
+		if (user) {
+			res.status(200).json({
+				isTokenValid: true,
+				user: {
+					_id: user._id,
+					email: user.email
+				}
+			});
 		} else {
-			res.status(400).json({
+			res.status(500).json({
 				isTokenValid: false,
-				errorMessage: 'Invalid or expired access token'
+				errorMessage: 'Unable to extract user details with the provided access token'
 			});
 		}
 	}

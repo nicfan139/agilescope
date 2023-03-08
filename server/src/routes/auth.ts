@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers';
+import { checkAuth } from '../middleware';
 
 const router = Router();
 
@@ -9,6 +10,6 @@ router.post('/auth/verify_email', AuthController.verifyEmail);
 
 router.post('/auth/validate_otp', AuthController.validateOtp);
 
-router.post('/auth/validate_token', AuthController.validateToken);
+router.get('/auth/validate_token', checkAuth, AuthController.validateToken);
 
 export default router;
