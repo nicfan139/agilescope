@@ -47,7 +47,7 @@ export const userSchema = new Schema<TUser>(
 		},
 		verified: {
 			type: Boolean,
-			requred: true,
+			required: true,
 			default: false
 		},
 		verifyEmailToken: {
