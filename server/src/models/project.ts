@@ -1,7 +1,8 @@
 import { Schema, Types, model } from 'mongoose';
+import { TTask, taskSchema } from './task';
 import { TUser, userSchema } from './user';
 
-export type TTask = {
+export type TProject = {
 	_id: Types.ObjectId;
 	title: string;
 	description: string;
@@ -9,13 +10,14 @@ export type TTask = {
 	priority: 'low' | 'medium' | 'high' | 'urgent';
 	status: 'ready' | 'in-progress' | 'review' | 'completed';
 	createdBy: TUser;
-	assignee: TUser;
-	completedAt: string;
-	subtasks: Array<TTask> | null;
+	members: Array<TUser>;
+	tasks: Array<TTask>;
+	startedAt?: string;
+	completedAt?: string;
 	dueDate?: string;
 };
 
-export const taskSchema = new Schema<TTask>(
+export const projectSchema = new Schema<TProject>(
 	{
 		_id: Types.ObjectId,
 		title: {
@@ -51,7 +53,12 @@ export const taskSchema = new Schema<TTask>(
 			}
 		},
 		createdBy: userSchema,
-		assignee: userSchema,
+		members: [userSchema],
+		tasks: [taskSchema],
+		startedAt: {
+			type: String,
+			required: false
+		},
 		completedAt: {
 			type: String,
 			required: false
@@ -65,8 +72,4 @@ export const taskSchema = new Schema<TTask>(
 	{ timestamps: true }
 );
 
-taskSchema.add({
-	subtasks: [taskSchema]
-});
-
-export const Task = model('Task', taskSchema);
+export const Project = model('Project', projectSchema);
