@@ -5,7 +5,14 @@ import cors from 'cors';
 import { expressjwt } from 'express-jwt';
 import { connect } from 'mongoose';
 import { createServer } from 'http';
-import { authRoutes, projectRoutes, taskRoutes, teamRoutes, userRoutes } from './routes';
+import {
+	authRoutes,
+	projectRoutes,
+	sprintRoutes,
+	taskRoutes,
+	teamRoutes,
+	userRoutes
+} from './routes';
 
 dotenv.config();
 
@@ -33,7 +40,7 @@ app.use(
 	})
 );
 
-app.use('/api', authRoutes, projectRoutes, taskRoutes, teamRoutes, userRoutes);
+app.use('/api', authRoutes, projectRoutes, sprintRoutes, taskRoutes, teamRoutes, userRoutes);
 
 const httpServer = createServer(app);
 
