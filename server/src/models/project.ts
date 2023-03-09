@@ -1,9 +1,9 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { TTask, taskSchema } from './task';
 import { TUser, userSchema } from './user';
 
 export type TProject = {
-	_id: Types.ObjectId;
+	_id: string;
 	title: string;
 	description: string;
 	complexity: 'easy' | 'medium' | 'hard';
@@ -19,7 +19,6 @@ export type TProject = {
 
 export const projectSchema = new Schema<TProject>(
 	{
-		_id: Types.ObjectId,
 		title: {
 			type: String,
 			required: true
@@ -65,8 +64,7 @@ export const projectSchema = new Schema<TProject>(
 		},
 		dueDate: {
 			type: String,
-			required: true,
-			default: false
+			required: false
 		}
 	},
 	{ timestamps: true }

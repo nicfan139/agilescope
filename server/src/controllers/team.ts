@@ -17,7 +17,7 @@ const TeamController = {
 
 	getTeam: async (req: Request, res: Response) => {
 		const { teamId } = req.params;
-		const team = await Team.findById(teamId);
+		const team = await Team.findById(teamId, null, { lean: true });
 		if (team) {
 			res.status(200).json({
 				team
@@ -44,7 +44,10 @@ const TeamController = {
 
 	updateTeam: async (req: Request, res: Response) => {
 		const { teamId } = req.params;
-		const team = await Team.findByIdAndUpdate(teamId, req.body, { returnDocument: 'after' });
+		const team = await Team.findByIdAndUpdate(teamId, req.body, {
+			returnDocument: 'after',
+			lean: true
+		});
 		if (team) {
 			res.status(200).json({ team });
 		} else {

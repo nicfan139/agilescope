@@ -17,7 +17,7 @@ const SprintController = {
 
 	getSprint: async (req: Request, res: Response) => {
 		const { sprintId } = req.params;
-		const sprint = await Sprint.findById(sprintId);
+		const sprint = await Sprint.findById(sprintId, null, { lean: true });
 		if (sprint) {
 			res.status(200).json({
 				sprint
@@ -45,7 +45,8 @@ const SprintController = {
 	updateSprint: async (req: Request, res: Response) => {
 		const { sprintId } = req.params;
 		const sprint = await Sprint.findByIdAndUpdate(sprintId, req.body, {
-			returnDocument: 'after'
+			returnDocument: 'after',
+			lean: true
 		});
 		if (sprint) {
 			res.status(200).json({ sprint });

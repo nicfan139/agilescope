@@ -17,7 +17,7 @@ const TaskController = {
 
 	getTask: async (req: Request, res: Response) => {
 		const { taskId } = req.params;
-		const task = await Task.findById(taskId);
+		const task = await Task.findById(taskId, null, { lean: true });
 		if (task) {
 			res.status(200).json({
 				task
@@ -75,7 +75,10 @@ const TaskController = {
 
 	updateTask: async (req: Request, res: Response) => {
 		const { taskId } = req.params;
-		const task = await Task.findByIdAndUpdate(taskId, req.body, { returnDocument: 'after' });
+		const task = await Task.findByIdAndUpdate(taskId, req.body, {
+			returnDocument: 'after',
+			lean: true
+		});
 		if (task) {
 			res.status(200).json({ task });
 		} else {

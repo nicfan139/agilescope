@@ -1,7 +1,7 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 export type TUser = {
-	_id: Types.ObjectId;
+	_id: string;
 	email: string;
 	password: string;
 	firstName: string;
@@ -14,7 +14,6 @@ export type TUser = {
 
 export const userSchema = new Schema<TUser>(
 	{
-		_id: Types.ObjectId,
 		email: {
 			type: String,
 			required: true,

@@ -1,8 +1,8 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { TUser, userSchema } from './user';
 
 export type TTask = {
-	_id: Types.ObjectId;
+	_id: string;
 	title: string;
 	description: string;
 	complexity: 'easy' | 'medium' | 'hard';
@@ -17,7 +17,6 @@ export type TTask = {
 
 export const taskSchema = new Schema<TTask>(
 	{
-		_id: Types.ObjectId,
 		title: {
 			type: String,
 			required: true
@@ -58,8 +57,7 @@ export const taskSchema = new Schema<TTask>(
 		},
 		dueDate: {
 			type: String,
-			required: true,
-			default: false
+			required: true
 		}
 	},
 	{ timestamps: true }

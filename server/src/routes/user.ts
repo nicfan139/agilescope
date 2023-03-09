@@ -4,9 +4,11 @@ import { checkAuth } from '../middleware';
 
 const router = Router();
 
-router.post('/users', checkAuth, UserController.createUser);
+router.get('/users', checkAuth, UserController.getUsers);
 
 router.get('/users/:userId', checkAuth, UserController.getUser);
+
+router.post('/users', UserController.createUser);
 
 router.put('/users/:userId', checkAuth, UserController.updateUser);
 

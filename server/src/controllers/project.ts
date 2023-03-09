@@ -17,7 +17,7 @@ const ProjectController = {
 
 	getProject: async (req: Request, res: Response) => {
 		const { projectId } = req.params;
-		const project = await Project.findById(projectId);
+		const project = await Project.findById(projectId, null, { lean: true });
 		if (project) {
 			res.status(200).json({
 				project
@@ -45,7 +45,8 @@ const ProjectController = {
 	updateProject: async (req: Request, res: Response) => {
 		const { projectId } = req.params;
 		const project = await Project.findByIdAndUpdate(projectId, req.body, {
-			returnDocument: 'after'
+			returnDocument: 'after',
+			lean: true
 		});
 		if (project) {
 			res.status(200).json({ project });

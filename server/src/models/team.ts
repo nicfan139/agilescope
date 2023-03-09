@@ -1,8 +1,9 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { TUser, userSchema } from './user';
 import { TProject, projectSchema } from './project';
 
 export type TTeam = {
+	_id: string;
 	name: string;
 	description: string | null;
 	members: Array<TUser>;
@@ -11,7 +12,6 @@ export type TTeam = {
 
 export const teamSchema = new Schema(
 	{
-		_id: Types.ObjectId,
 		name: {
 			type: String,
 			required: true,
