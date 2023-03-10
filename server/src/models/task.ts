@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { TUser, userSchema } from './user';
+import { TUser } from './user';
 
 export type TTask = {
 	_id: string;
@@ -11,7 +11,7 @@ export type TTask = {
 	createdBy: TUser;
 	assignee: TUser;
 	completedAt: string;
-	subtasks: Array<TTask> | null;
+	subtasks: Array<TUser>;
 	dueDate?: string;
 };
 
@@ -49,22 +49,30 @@ export const taskSchema = new Schema<TTask>(
 				message: '{VALUE} is not a valid status value'
 			}
 		},
-		createdBy: userSchema,
-		assignee: userSchema,
+		createdBy: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+			required: true
+		},
+		assignee: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+			required: false
+		},
 		completedAt: {
 			type: String,
 			required: false
 		},
 		dueDate: {
 			type: String,
-			required: true
+			required: false
 		}
 	},
 	{ timestamps: true }
 );
 
 taskSchema.add({
-	subtasks: [taskSchema]
+	subtasks: [{ type: Schema.Types.ObjectId, ref: 'Task', required: false }]
 });
 
 export const Task = model('Task', taskSchema);

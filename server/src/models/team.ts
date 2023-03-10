@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { TUser, userSchema } from './user';
-import { TProject, projectSchema } from './project';
+import { TUser } from './user';
+import { TProject } from './project';
 
 export type TTeam = {
 	_id: string;
@@ -22,8 +22,8 @@ export const teamSchema = new Schema(
 			required: false,
 			default: null
 		},
-		members: [userSchema],
-		projects: [projectSchema]
+		members: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+		projects: [{ type: Schema.Types.ObjectId, ref: 'Project' }]
 	},
 	{
 		timestamps: true

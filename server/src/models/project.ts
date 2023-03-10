@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { TTask, taskSchema } from './task';
-import { TUser, userSchema } from './user';
+import { TTask } from './task';
+import { TUser } from './user';
 
 export type TProject = {
 	_id: string;
@@ -51,9 +51,25 @@ export const projectSchema = new Schema<TProject>(
 				message: '{VALUE} is not a valid status value'
 			}
 		},
-		createdBy: userSchema,
-		members: [userSchema],
-		tasks: [taskSchema],
+		createdBy: {
+			type: Schema.Types.ObjectId,
+			ref: 'User',
+			required: true
+		},
+		members: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'User',
+				required: false
+			}
+		],
+		tasks: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Task',
+				required: false
+			}
+		],
 		startedAt: {
 			type: String,
 			required: false

@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import { Task } from '../models';
 
+const USER_FIELDS = ['_id', 'email', 'firstName', 'lastName'];
+
 const TaskController = {
 	getTasks: async (_req: Request, res: Response) => {
-		const tasks = await Task.find();
+		const tasks = await Task.find().populate('createdBy', USER_FIELDS);
 		if (tasks) {
 			res.status(200).json({
 				tasks
@@ -17,7 +19,10 @@ const TaskController = {
 
 	getTask: async (req: Request, res: Response) => {
 		const { taskId } = req.params;
-		const task = await Task.findById(taskId, null, { lean: true });
+		const task = await Task.findById(taskId, null, { lean: true }).populate(
+			'createdBy',
+			USER_FIELDS
+		);
 		if (task) {
 			res.status(200).json({
 				task
@@ -49,23 +54,20 @@ const TaskController = {
 		const task = await Task.findById(taskId);
 
 		if (task) {
-			if (task.subtasks) {
-				task.subtasks.push(subtask);
-				task.save();
-				res.status(201).json({
-					task
-				});
-			} else {
-				const subtasks = [task];
-				const updatedTask = await Task.findByIdAndUpdate(
-					taskId,
-					{ subtasks },
-					{ returnDocument: 'after' }
-				);
-				res.status(201).json({
-					task: updatedTask
-				});
-			}
+			const subtasks = [...task.subtasks, subtask._id];
+			const updatedTask = await Task.findByIdAndUpdate(
+				taskId,
+				{ subtasks },
+				{
+					returnDocument: 'after',
+					populate: {
+						path: 'subtasks'
+					}
+				}
+			);
+			res.status(201).json({
+				task: updatedTask
+			});
 		} else {
 			res.status(400).json({
 				errorMessage: `Task #${taskId} does not exist`
@@ -77,7 +79,11 @@ const TaskController = {
 		const { taskId } = req.params;
 		const task = await Task.findByIdAndUpdate(taskId, req.body, {
 			returnDocument: 'after',
-			lean: true
+			lean: true,
+			populate: {
+				path: 'createdBy',
+				select: USER_FIELDS
+			}
 		});
 		if (task) {
 			res.status(200).json({ task });

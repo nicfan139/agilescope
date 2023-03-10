@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { TTask, taskSchema } from './task';
+import { TTask } from './task';
 
 export type TSprint = {
 	_id: string;
@@ -14,7 +14,7 @@ export const sprintSchema = new Schema<TSprint>({
 		type: String,
 		required: true
 	},
-	tasks: [taskSchema],
+	tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
 	startDate: {
 		type: String,
 		required: false
