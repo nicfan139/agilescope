@@ -1,0 +1,43 @@
+{
+	"name": "agilescope-client",
+	"version": "1.0.0",
+	"private": true,
+	"description": "agilescope-client",
+	"keywords": [
+		"gatsby"
+	],
+	"scripts": {
+		"develop": "gatsby develop",
+		"start": "gatsby develop",
+		"build": "gatsby build",
+		"serve": "gatsby serve",
+		"clean": "gatsby clean",
+		"typecheck": "tsc --noEmit",
+		"format": "prettier --write .",
+		"polish": "npm run typecheck && npm run format"
+	},
+	"dependencies": {
+		"@chakra-ui/gatsby-plugin": "^3.1.1",
+		"@chakra-ui/icons": "^2.0.17",
+		"@chakra-ui/react": "^2.5.1",
+		"@emotion/react": "^11.10.6",
+		"@emotion/styled": "^11.10.6",
+		"@tanstack/react-query": "^4.26.1",
+		"axios": "^1.3.4",
+		"framer-motion": "^10.2.3",
+		"gatsby": "^5.7.0",
+		"gatsby-plugin-alias-imports": "^1.0.5",
+		"i": "^0.3.7",
+		"npm": "^9.6.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-hook-form": "^7.43.5"
+	},
+	"devDependencies": {
+		"@types/node": "^18.14.0",
+		"@types/react": "^18.0.28",
+		"@types/react-dom": "^18.0.11",
+		"prettier": "^2.8.4",
+		"typescript": "^4.9.5"
+	}
+}

@@ -1,0 +1,12 @@
+.prettierrc
+.env
+.gitignore
+/public
+/.cache
+package.json
+package-lock.json
+tsconfig.json
+README.md
+
+gatsby-browser.tsx
+gatsby-config.ts

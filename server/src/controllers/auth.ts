@@ -17,7 +17,7 @@ const AuthController = {
 			bcrypt.compare(req.body.password, user.password, async (err, result) => {
 				if (err) {
 					res.status(401).json({
-						message: 'Authentication failed'
+						errorMessage: 'Invalid email/password combination'
 					});
 				}
 
@@ -55,13 +55,13 @@ const AuthController = {
 					});
 				} else {
 					res.status(401).json({
-						message: 'Authentication failed'
+						errorMessage: 'Invalid email/password combination'
 					});
 				}
 			});
 		} else {
 			res.status(401).json({
-				message: 'Authorization failed'
+				errorMessage: 'Authentication failed'
 			});
 		}
 	},
