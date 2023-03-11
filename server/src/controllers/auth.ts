@@ -148,14 +148,17 @@ const AuthController = {
 	},
 
 	validateToken: async (_req: Request, res: Response) => {
-		const user = await User.findOne({ _id: res.locals.userId });
+		const user = await User.findOne({ _id: res.locals.userId }, [
+			'_id',
+			'email',
+			'firstName',
+			'lastName',
+			'avatarUrl'
+		]);
 		if (user) {
 			res.status(200).json({
 				isTokenValid: true,
-				user: {
-					_id: user._id,
-					email: user.email
-				}
+				user
 			});
 		} else {
 			res.status(500).json({

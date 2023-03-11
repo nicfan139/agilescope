@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, HeadFC } from 'gatsby';
+import { HeadFC } from 'gatsby';
 import { Box, Heading, Text, Button } from '@chakra-ui/react';
 import { LayoutCenter } from '@/components';
 

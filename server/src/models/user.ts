@@ -6,6 +6,7 @@ export type TUser = {
 	password: string;
 	firstName: string;
 	lastName: string;
+	avatarUrl: string;
 	otpEnabled: boolean;
 	otpSecret?: string;
 	verified: boolean;
@@ -33,6 +34,11 @@ export const userSchema = new Schema<TUser>(
 		lastName: {
 			type: String,
 			required: true
+		},
+		avatarUrl: {
+			type: String,
+			required: false,
+			default: null
 		},
 		otpEnabled: {
 			type: Boolean,

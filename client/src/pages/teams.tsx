@@ -3,14 +3,14 @@ import type { HeadFC, PageProps } from 'gatsby';
 import { Heading } from '@chakra-ui/react';
 import { LayoutDashboard } from '@/components';
 
-export const Head: HeadFC = () => <title>Dashboard | AgileScope</title>;
+export const Head: HeadFC = () => <title>Teams | AgileScope</title>;
 
-const DashboardPage = ({}: PageProps): React.ReactElement => {
+const TeamsPage = ({}: PageProps): React.ReactElement => {
 	return (
 		<main>
 			<LayoutDashboard>
 				<Heading as="h1" size="2xl" mb="1.5rem">
-					Dashboard
+					Teams
 				</Heading>
 
 				<p>
@@ -23,4 +23,4 @@ const DashboardPage = ({}: PageProps): React.ReactElement => {
 	);
 };
 
-export default DashboardPage;
+export default TeamsPage;

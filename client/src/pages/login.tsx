@@ -35,7 +35,6 @@ const LoginPage = ({}: PageProps): React.ReactElement => {
 		try {
 			const res = await authLogin.mutateAsync(form);
 			if (res.status === 200) {
-				console.log(res.data);
 				setTimeout(() => {
 					window.location.href = '/';
 				}, 4000);
@@ -71,12 +70,20 @@ const LoginPage = ({}: PageProps): React.ReactElement => {
 
 					<InputGroup mb="1rem">
 						<InputLeftAddon children="Email" />
-						<Input type="text" {...register('email', { required: true })} />
+						<Input
+							type="text"
+							{...register('email', { required: true })}
+							disabled={authLogin.isLoading}
+						/>
 					</InputGroup>
 
 					<InputGroup mb="1rem">
 						<InputLeftAddon children="Password" />
-						<Input type="password" {...register('password', { required: true })} />
+						<Input
+							type="password"
+							{...register('password', { required: true })}
+							disabled={authLogin.isLoading}
+						/>
 					</InputGroup>
 
 					<Button type="submit" variant="solid" colorScheme="green" isLoading={authLogin.isLoading}>
