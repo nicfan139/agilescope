@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { Task } from '../models';
-
-const USER_FIELDS = ['_id', 'email', 'firstName', 'lastName'];
+import { USER_FIELDS } from '../utils';
 
 const TaskController = {
 	getTasks: async (_req: Request, res: Response) => {

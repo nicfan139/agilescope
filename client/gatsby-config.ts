@@ -41,6 +41,7 @@ const config: GatsbyConfig = {
 					'@/components': path.resolve(__dirname, 'src/components'),
 					'@/constants': path.resolve(__dirname, 'src/constants'),
 					'@/contexts': path.resolve(__dirname, 'src/contexts'),
+					'@/forms': path.resolve(__dirname, 'src/forms'),
 					'@/helpers': path.resolve(__dirname, 'src/helpers'),
 					'@/hooks': path.resolve(__dirname, 'src/hooks')
 				},

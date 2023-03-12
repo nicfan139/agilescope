@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'gatsby';
 import {
+	Avatar,
 	Box,
 	Button,
 	Divider,
@@ -52,6 +53,7 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 				colorScheme="green"
 				leftIcon={<HamburgerIcon />}
 				onClick={onOpen}
+				zIndex="overlay"
 				display={{ base: 'flex', md: 'none' }}
 				alignItems="center"
 				position="absolute"
@@ -70,6 +72,23 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 							AgileScope
 						</Heading>
 					</DrawerHeader>
+
+					<Divider />
+
+					<Box display="flex" p="1rem">
+						<Avatar
+							size="md"
+							name={`${currentUser?.firstName} ${currentUser?.lastName}`}
+							src={currentUser?.avatarUrl}
+						/>
+
+						<Box ml="0.5rem">
+							<Text>
+								{currentUser?.firstName} {currentUser?.lastName}
+							</Text>
+							<Text>({currentUser?.email})</Text>
+						</Box>
+					</Box>
 
 					<Divider />
 
@@ -97,7 +116,7 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 				flexDirection="column"
 				justifyContent="space-between"
 				h="100%"
-				w="500px"
+				w="240px"
 				p="1rem"
 				borderRight="1px solid green"
 			>
@@ -113,16 +132,27 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 					))}
 				</Box>
 
-				<Box display="flex" flexDirection="column" gap="0.25rem">
-					<Text>
-						Logged in as: {currentUser?.firstName} {currentUser?.lastName}
-					</Text>
-					<Text>({currentUser?.email})</Text>
+				<Box display="flex" flexDirection="column" gap="1rem">
+					<Box display="flex">
+						<Avatar
+							size="md"
+							name={`${currentUser?.firstName} ${currentUser?.lastName}`}
+							src={currentUser?.avatarUrl}
+						/>
+
+						<Box ml="0.5rem">
+							<Text>
+								{currentUser?.firstName} {currentUser?.lastName}
+							</Text>
+							<Text>({currentUser?.email})</Text>
+						</Box>
+					</Box>
+
 					<Button onClick={handleLogout}>Logout</Button>
 				</Box>
 			</Box>
 
-			<Box h="100%" overflowY="auto" p="2rem">
+			<Box h="100%" w="100%" overflowY="auto" p="2rem">
 				{children}
 			</Box>
 		</Box>

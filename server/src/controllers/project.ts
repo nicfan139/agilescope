@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 import { Project } from '../models';
+import { USER_FIELDS } from '../utils';
 
 const ProjectController = {
 	getProjects: async (_req: Request, res: Response) => {
-		const projects = await Project.find();
+		const projects = await Project.find()
+			.sort({ createdAt: 'desc' })
+			.populate('createdBy', USER_FIELDS);
 		if (projects) {
 			res.status(200).json({
 				projects
@@ -17,7 +20,10 @@ const ProjectController = {
 
 	getProject: async (req: Request, res: Response) => {
 		const { projectId } = req.params;
-		const project = await Project.findById(projectId, null, { lean: true });
+		const project = await Project.findById(projectId, null, { lean: true }).populate(
+			'createdBy',
+			USER_FIELDS
+		);
 		if (project) {
 			res.status(200).json({
 				project
