@@ -1,8 +1,25 @@
 import React from 'react';
 import { Link } from 'gatsby';
-import { Box, Button, Heading, Text, StyleProps } from '@chakra-ui/react';
-import { handleLogout } from '@/helpers';
+import {
+	Box,
+	Button,
+	Divider,
+	Drawer,
+	DrawerOverlay,
+	DrawerCloseButton,
+	DrawerContent,
+	DrawerHeader,
+	DrawerBody,
+	DrawerFooter,
+	Heading,
+	Text,
+	StyleProps,
+	useDisclosure
+} from '@chakra-ui/react';
+import { HamburgerIcon } from '@chakra-ui/icons';
+import { NAV_LINKS } from '@/constants';
 import { useUserContext } from '@/contexts';
+import { handleLogout } from '@/helpers';
 
 interface ILayoutProps extends StyleProps {
 	children: React.ReactNode;
@@ -27,8 +44,51 @@ export const LayoutCenter = ({ children, ...otherProps }: ILayoutProps): React.R
 
 export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement => {
 	const { currentUser } = useUserContext();
+	const { isOpen, onOpen, onClose } = useDisclosure();
+
 	return (
-		<Box display="flex" h="100vh">
+		<Box position="relative" display="flex" h="100vh">
+			<Button
+				colorScheme="green"
+				leftIcon={<HamburgerIcon />}
+				onClick={onOpen}
+				display={{ base: 'flex', md: 'none' }}
+				alignItems="center"
+				position="absolute"
+				top="1rem"
+				right="1rem"
+			>
+				Menu
+			</Button>
+
+			<Drawer isOpen={isOpen} placement="right" onClose={onClose} size="lg">
+				<DrawerOverlay />
+				<DrawerContent>
+					<DrawerCloseButton size="lg" />
+					<DrawerHeader>
+						<Heading as="h2" size="xl">
+							AgileScope
+						</Heading>
+					</DrawerHeader>
+
+					<Divider />
+
+					<DrawerBody display="flex" flexDirection="column" gap="2rem" mt="1rem" fontSize="1.5rem">
+						{NAV_LINKS.map(({ label, href }) => (
+							<Link to={href}>{label}</Link>
+						))}
+					</DrawerBody>
+
+					<Divider />
+
+					<DrawerFooter>
+						<Button onClick={handleLogout} w="100%">
+							Logout
+						</Button>
+					</DrawerFooter>
+				</DrawerContent>
+			</Drawer>
+
 			<Box
 				display={{
 					base: 'none',
@@ -42,17 +102,15 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 				borderRight="1px solid green"
 			>
 				<Link to="/">
-					<Heading as="h2" size="lg">
+					<Heading as="h2" size="xl">
 						AgileScope
 					</Heading>
 				</Link>
 
 				<Box display="flex" flexDirection="column" gap="1rem" fontSize="1.5rem">
-					<Link to="/">Dashboard</Link>
-					<Link to="/projects">Projects</Link>
-					<Link to="/sprints">Sprints</Link>
-					<Link to="/tasks">Tasks</Link>
-					<Link to="/teams">Teams</Link>
+					{NAV_LINKS.map(({ label, href }) => (
+						<Link to={href}>{label}</Link>
+					))}
 				</Box>
 
 				<Box display="flex" flexDirection="column" gap="0.25rem">

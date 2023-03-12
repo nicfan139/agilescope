@@ -9,6 +9,7 @@ import React, {
 import { useToast, Spinner } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 import { LayoutCenter } from '@/components';
+import { PUBLIC_ROUTES } from '@/constants';
 import { getAccessToken, handleLogout } from '@/helpers';
 import { useAuthValidateToken } from '@/hooks';
 
@@ -22,7 +23,6 @@ const UserContext = createContext<IUserContext>({
 	setCurrentUser: () => {}
 });
 
-const PUBLIC_ROUTES = ['/login/'];
 const IS_PUBLIC_ROUTE = PUBLIC_ROUTES.includes(window.location.pathname);
 
 export const UserContextProvider = ({ children }: { children: ReactNode }): ReactElement => {

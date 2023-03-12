@@ -11,6 +11,7 @@ const config: GatsbyConfig = {
 		title: `agilescope-client`,
 		siteUrl: `https://agilescope-client.vercel.app`
 	},
+	trailingSlash: 'never',
 	graphqlTypegen: true,
 	plugins: [
 		{
@@ -38,6 +39,7 @@ const config: GatsbyConfig = {
 			options: {
 				alias: {
 					'@/components': path.resolve(__dirname, 'src/components'),
+					'@/constants': path.resolve(__dirname, 'src/constants'),
 					'@/contexts': path.resolve(__dirname, 'src/contexts'),
 					'@/helpers': path.resolve(__dirname, 'src/helpers'),
 					'@/hooks': path.resolve(__dirname, 'src/hooks')
