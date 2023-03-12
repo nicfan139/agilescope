@@ -6,7 +6,15 @@ import { sendEmail } from '../utils';
 
 dotenv.config();
 const BCRYPT_SALT_ROUNDS = Number(process.env.BCRYPT_SALT_ROUNDS);
-const USER_FIELDS = ['_id', 'email', 'firstName', 'lastName', 'otpEnabled', 'verified'];
+const USER_FIELDS = [
+	'_id',
+	'email',
+	'firstName',
+	'lastName',
+	'avatarUrl',
+	'otpEnabled',
+	'verified'
+];
 
 const UserController = {
 	getUsers: async (_req: Request, res: Response) => {

@@ -92,10 +92,21 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 
 					<Divider />
 
-					<DrawerBody display="flex" flexDirection="column" gap="2rem" mt="1rem" fontSize="1.5rem">
-						{NAV_LINKS.map(({ label, href }) => (
-							<Link to={href}>{label}</Link>
-						))}
+					<DrawerBody display="flex" flexDirection="column" gap="1rem" mt="1rem" fontSize="1.5rem">
+						{NAV_LINKS.map(({ label, href }) => {
+							const IS_CURRENT_PAGE = href === window.location.pathname;
+							return (
+								<Link to={href}>
+									<Box
+										p="0.5rem 1rem"
+										borderRadius="0.375rem"
+										{...(IS_CURRENT_PAGE && { backgroundColor: 'green.100' })}
+									>
+										{label}
+									</Box>
+								</Link>
+							);
+						})}
 					</DrawerBody>
 
 					<Divider />

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { HeadFC, PageProps } from 'gatsby';
-import { Box, Button, Heading, Spinner, Stack, Tag, Text, useDisclosure } from '@chakra-ui/react';
+import { Badge, Box, Button, Heading, Spinner, Stack, Text, useDisclosure } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { LayoutDashboard } from '@/components';
@@ -70,21 +70,23 @@ const ProjectsPage = ({}: PageProps): React.ReactElement => {
 
 											<Text>
 												Complexity:{' '}
-												<Tag colorScheme={getComplexityColour(project.complexity)}>
+												<Badge colorScheme={getComplexityColour(project.complexity)}>
 													{project.complexity}
-												</Tag>
+												</Badge>
 											</Text>
 
 											<Text>
 												Priority:{' '}
-												<Tag colorScheme={getPriorityColour(project.priority)}>
+												<Badge colorScheme={getPriorityColour(project.priority)}>
 													{project.priority}
-												</Tag>
+												</Badge>
 											</Text>
 
 											<Text>
 												Status:{' '}
-												<Tag colorScheme={getStatusColour(project.status)}>{project.status}</Tag>
+												<Badge colorScheme={getStatusColour(project.status)}>
+													{project.status}
+												</Badge>
 											</Text>
 										</Stack>
 									</Box>

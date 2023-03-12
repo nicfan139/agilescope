@@ -20,9 +20,10 @@ import {
 	useToast,
 	Box
 } from '@chakra-ui/react';
+import { MultiSelect, TMultiSelectOption } from '@/components';
 import { COMPLEXITY_OPTIONS, PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import { useUserContext } from '@/contexts';
-import { useProjectCreate } from '@/hooks';
+import { useUsersList, useProjectCreate } from '@/hooks';
 
 interface IAddProjectProps {
 	isOpen: boolean;
@@ -35,41 +36,63 @@ interface IAddProjectForm {
 	complexity: TComplexityValue;
 	priority: TPriorityValue;
 	status: TStatusValue;
+	members: Array<TMultiSelectOption>;
 }
 
 const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement => {
 	const { currentUser } = useUserContext();
-	const { handleSubmit, register, reset } = useForm<IAddProjectForm>();
+	const { handleSubmit, register, reset, setValue, watch } = useForm<IAddProjectForm>({
+		defaultValues: {
+			members: []
+		}
+	});
+	const { data: usersListData } = useUsersList();
 	const projectCreate = useProjectCreate();
 	const toast = useToast();
 
 	const onSubmit = async (form: IAddProjectForm) => {
-		try {
-			const payload = {
-				...form,
-				createdBy: currentUser?._id as string
-			};
+		if (form.members.length === 0) {
+			toast({
+				status: 'warning',
+				title: 'A project must have at least one member'
+			});
+		} else {
+			try {
+				const payload = {
+					...form,
+					createdBy: currentUser?._id as string,
+					members: form.members.map((m) => m.value)
+				};
 
-			const data = await projectCreate.mutateAsync(payload);
+				const data = await projectCreate.mutateAsync(payload);
 
-			if (data.project) {
-				reset();
-				onClose();
-			} else {
+				if (data.project) {
+					reset();
+					onClose();
+				} else {
+					toast({
+						status: 'error',
+						title: data.errorMessage
+					});
+				}
+			} catch (e: unknown) {
+				const error = e as AxiosError;
+				const data = error.response?.data as { errorMessage: string };
 				toast({
 					status: 'error',
 					title: data.errorMessage
 				});
 			}
-		} catch (e: unknown) {
-			const error = e as AxiosError;
-			const data = error.response?.data as { errorMessage: string };
-			toast({
-				status: 'error',
-				title: data.errorMessage
-			});
 		}
 	};
+
+	const USERS_LIST =
+		usersListData?.users?.map((user: TUser) => ({
+			label: `${user.firstName} ${user.lastName}`,
+			value: user._id
+		})) ?? [];
+
+	const FORM_STATE = watch();
 
 	return (
 		<Drawer isOpen={isOpen} placement="right" onClose={onClose} size="lg">
@@ -137,6 +160,22 @@ const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement =
 									</Select>
 								</FormControl>
 							</Box>
+
+							<FormControl isRequired display="flex" flexDirection="column" alignItems="flex-start">
+								<FormLabel>Members</FormLabel>
+								<MultiSelect
+									placeholder="Select members"
+									selected={FORM_STATE.members}
+									options={USERS_LIST}
+									onSelect={(option) => setValue('members', [...FORM_STATE.members, option])}
+									onUnselect={(option) =>
+										setValue(
+											'members',
+											FORM_STATE.members.filter((m) => m.value !== option.value)
+										)
+									}
+								/>
+							</FormControl>
 						</Box>
 					</DrawerBody>
 

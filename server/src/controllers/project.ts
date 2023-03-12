@@ -6,7 +6,8 @@ const ProjectController = {
 	getProjects: async (_req: Request, res: Response) => {
 		const projects = await Project.find()
 			.sort({ createdAt: 'desc' })
-			.populate('createdBy', USER_FIELDS);
+			.populate('createdBy', USER_FIELDS)
+			.populate('members', USER_FIELDS);
 		if (projects) {
 			res.status(200).json({
 				projects
