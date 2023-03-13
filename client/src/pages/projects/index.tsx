@@ -24,6 +24,8 @@ const ProjectsPage = (): React.ReactElement => {
 	const { isLoading, data } = useProjectsList();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
+	const PROJECTS_LIST = data?.projects;
+
 	return (
 		<main>
 			<LayoutDashboard>
@@ -32,14 +34,11 @@ const ProjectsPage = (): React.ReactElement => {
 						Projects
 					</Heading>
 
-					<Button
-						colorScheme="green"
-						leftIcon={<AddIcon />}
-						onClick={onOpen}
-						display={{ base: 'none', md: 'flex' }}
-					>
-						Add Project
-					</Button>
+					{PROJECTS_LIST && (
+						<Button colorScheme="green" leftIcon={<AddIcon />} onClick={onOpen}>
+							Add Project
+						</Button>
+					)}
 				</Box>
 
 				<ProjectForm {...{ isOpen, onClose }} />
@@ -48,14 +47,14 @@ const ProjectsPage = (): React.ReactElement => {
 					<Spinner size="xl" />
 				) : (
 					<Box>
-						{data.projects.length > 0 ? (
+						{PROJECTS_LIST.length > 0 ? (
 							<Box
 								display="flex"
 								flexDirection={{ base: 'column', row: 'row' }}
 								flexWrap="wrap"
 								gap="1.5rem"
 							>
-								{data.projects.map((project: TProject) => (
+								{PROJECTS_LIST.map((project: TProject) => (
 									<Link key={`project-card-${project._id}`} to={`/projects/${project._id}`}>
 										<Box
 											w={{

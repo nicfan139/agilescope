@@ -10,7 +10,7 @@ export type TTask = {
 	priority: 'low' | 'medium' | 'high' | 'urgent';
 	status: 'ready' | 'in-progress' | 'review' | 'completed';
 	createdBy: TUser;
-	assignee: TUser;
+	assignedTo: TUser;
 	project?: TProject;
 	completedAt: string;
 	subtasks: Array<TUser>;
@@ -56,7 +56,7 @@ export const taskSchema = new Schema<TTask>(
 			ref: 'User',
 			required: true
 		},
-		assignee: {
+		assignedTo: {
 			type: Schema.Types.ObjectId,
 			ref: 'User',
 			required: false

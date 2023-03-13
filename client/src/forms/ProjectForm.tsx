@@ -3,18 +3,12 @@ import { useForm } from 'react-hook-form';
 import { AxiosError } from 'axios';
 import {
 	Box,
-	Button,
-	Divider,
 	Drawer,
 	DrawerOverlay,
-	DrawerCloseButton,
 	DrawerContent,
-	DrawerHeader,
 	DrawerBody,
-	DrawerFooter,
 	FormControl,
 	FormLabel,
-	Heading,
 	Input,
 	Select,
 	Textarea,
@@ -23,7 +17,9 @@ import {
 import { MultiSelect, TMultiSelectOption } from '@/components';
 import { COMPLEXITY_OPTIONS, PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import { useUserContext } from '@/contexts';
+import { getFullName } from '@/helpers';
 import { useUsersList, useProjectCreate, useProjectUpdate } from '@/hooks';
+import { FormHeader, FormFooter } from './shared';
 
 interface IProjectFormProps {
 	isOpen: boolean;
@@ -49,9 +45,7 @@ const ProjectForm = ({ isOpen, onClose, project }: IProjectFormProps): React.Rea
 			complexity: project?.complexity,
 			priority: project?.priority,
 			status: project?.status,
-			members:
-				project?.members?.map((m) => ({ label: `${m.firstName} ${m.lastName}`, value: m._id })) ??
-				[]
+			members: project?.members?.map((m) => ({ label: getFullName(m), value: m._id })) ?? []
 		}
 	});
 	const { data: usersListData } = useUsersList();
@@ -62,7 +56,7 @@ const ProjectForm = ({ isOpen, onClose, project }: IProjectFormProps): React.Rea
 	const USERS_LIST = useMemo(() => {
 		if (usersListData?.users) {
 			return usersListData?.users?.map((user: TUser) => ({
-				label: `${user.firstName} ${user.lastName}`,
+				label: getFullName(user),
 				value: user._id
 			}));
 		}
@@ -113,22 +107,16 @@ const ProjectForm = ({ isOpen, onClose, project }: IProjectFormProps): React.Rea
 	};
 
 	const FORM_STATE = watch();
+	const IS_SUBMITTING = projectCreate.isLoading || projectUpdate.isLoading;
 
 	return (
 		<Drawer isOpen={isOpen} placement="right" onClose={onClose} size="lg">
 			<DrawerOverlay />
 			<DrawerContent>
-				<DrawerCloseButton size="lg" />
-				<DrawerHeader>
-					<Heading as="h2" size="xl">
-						{project ? 'Update' : 'Add a new'} project
-					</Heading>
-				</DrawerHeader>
-
-				<Divider />
+				<FormHeader title={project ? 'Update project' : 'Add a new project'} />
 
 				<form onSubmit={handleSubmit(onSubmit)}>
-					<DrawerBody>
+					<DrawerBody h="100%" maxH="calc(100vh - 160px)" pt="1rem" pb="2rem">
 						<Box display="flex" flexDirection="column" gap="1rem">
 							<FormControl isRequired>
 								<FormLabel>Title</FormLabel>
@@ -205,23 +193,7 @@ const ProjectForm = ({ isOpen, onClose, project }: IProjectFormProps): React.Rea
 						</Box>
 					</DrawerBody>
 
-					<Divider />
-
-					<DrawerFooter>
-						<Button size="lg" variant="ghost" colorScheme="green" onClick={onClose}>
-							Cancel
-						</Button>
-
-						<Button
-							type="submit"
-							size="lg"
-							variant="solid"
-							colorScheme="green"
-							isLoading={projectCreate.isLoading}
-						>
-							Submit
-						</Button>
-					</DrawerFooter>
+					<FormFooter onClose={onClose} isSubmitting={IS_SUBMITTING} />
 				</form>
 			</DrawerContent>
 		</Drawer>

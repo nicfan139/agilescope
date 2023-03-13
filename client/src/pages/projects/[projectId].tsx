@@ -17,7 +17,7 @@ import { Avatar, LayoutDashboard } from '@/components';
 import { useUserContext } from '@/contexts';
 import { ProjectForm } from '@/forms';
 import { useProjectDetails } from '@/hooks';
-import { getComplexityColour, getPriorityColour, getStatusColour } from '@/helpers';
+import { getComplexityColour, getFullName, getPriorityColour, getStatusColour } from '@/helpers';
 
 export const Head: HeadFC = () => <title>Project | AgileScope</title>;
 
@@ -44,7 +44,14 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 					</Button>
 				</Link>
 
-				<Box display="flex" justifyContent="space-between" alignItems="center" my="1.5rem">
+				<Box
+					display="flex"
+					flexDirection={{ base: 'column', md: 'row' }}
+					gap="1rem"
+					justifyContent="space-between"
+					alignItems={{ base: 'flex-start', md: 'center' }}
+					my="1.5rem"
+				>
 					<Box>
 						<Heading as="h1" size="2xl" mb="0.25rem">
 							{PROJECT_DETAILS.title}
@@ -52,7 +59,7 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 
 						<Box fontSize="xs" fontStyle="italic">
 							<Text>
-								Created by {PROJECT_OWNER.firstName} {PROJECT_OWNER.lastName} on{' '}
+								Created by {getFullName(PROJECT_OWNER)} on{' '}
 								{dayjs(PROJECT_DETAILS.createdAt).format('YYYY-MM-DD')}
 							</Text>
 							<Text>
@@ -66,7 +73,7 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 							colorScheme="green"
 							leftIcon={<EditIcon />}
 							onClick={onOpen}
-							display={{ base: 'none', md: 'flex' }}
+							ml={{ base: 0, md: '2rem' }}
 						>
 							Update
 						</Button>
@@ -81,39 +88,39 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 
 				<Divider />
 
-				<Stack direction="row" flexWrap="wrap" spacing={{ base: '1rem', md: '2rem' }} my="1rem">
-					<Box>
-						<Heading as="h3" fontSize="2xl">
+				<Box display="flex" flexWrap="wrap" gap={{ base: '2rem', md: '3rem' }} my="1rem">
+					<Stack alignItems="flex-start">
+						<Heading as="h3" fontSize="xl">
 							Complexity
 						</Heading>
 						<Badge colorScheme={getComplexityColour(PROJECT_DETAILS.complexity)}>
 							{PROJECT_DETAILS.complexity}
 						</Badge>
-					</Box>
+					</Stack>
 
-					<Box>
-						<Heading as="h3" fontSize="2xl">
+					<Stack alignItems="flex-start">
+						<Heading as="h3" fontSize="xl">
 							Priority
 						</Heading>
 						<Badge colorScheme={getPriorityColour(PROJECT_DETAILS.priority)}>
 							{PROJECT_DETAILS.priority}
 						</Badge>
-					</Box>
+					</Stack>
 
-					<Box>
-						<Heading as="h3" fontSize="2xl">
+					<Stack alignItems="flex-start">
+						<Heading as="h3" fontSize="xl">
 							Status
 						</Heading>
 						<Badge colorScheme={getStatusColour(PROJECT_DETAILS.status)}>
 							{PROJECT_DETAILS.status}
 						</Badge>
-					</Box>
-				</Stack>
+					</Stack>
+				</Box>
 
 				<Divider />
 
 				<Stack my="1rem">
-					<Heading as="h3" fontSize="2xl">
+					<Heading as="h3" fontSize="xl">
 						Members ({PROJECT_DETAILS.members.length})
 					</Heading>
 					<Stack direction="row" flexWrap="wrap">
@@ -126,7 +133,7 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 				<Divider />
 
 				<Stack my="1rem">
-					<Heading as="h3" fontSize="2xl">
+					<Heading as="h3" fontSize="xl">
 						Tasks ({PROJECT_DETAILS.tasks.length})
 					</Heading>
 				</Stack>

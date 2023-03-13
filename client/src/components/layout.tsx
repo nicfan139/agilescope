@@ -19,7 +19,7 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { NAV_LINKS } from '@/constants';
 import { useUserContext } from '@/contexts';
-import { handleLogout } from '@/helpers';
+import { getFullName, handleLogout } from '@/helpers';
 import Avatar from './Avatar';
 
 interface ILayoutProps extends StyleProps {
@@ -50,15 +50,17 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 	return (
 		<Box position="relative" display="flex" h="100vh">
 			<Button
-				colorScheme="green"
+				colorScheme="gray"
 				leftIcon={<HamburgerIcon />}
 				onClick={onOpen}
 				zIndex="overlay"
 				display={{ base: 'flex', md: 'none' }}
 				alignItems="center"
 				position="absolute"
-				top="1rem"
-				right="1rem"
+				bottom="2rem"
+				right="2rem"
+				size="lg"
+				boxShadow="md"
 			>
 				Menu
 			</Button>
@@ -81,9 +83,7 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 								<Avatar user={currentUser} />
 
 								<Box ml="0.5rem">
-									<Text>
-										{currentUser.firstName} {currentUser.lastName}
-									</Text>
+									<Text>{getFullName(currentUser)}</Text>
 									<Text>({currentUser.email})</Text>
 								</Box>
 							</Box>
@@ -94,16 +94,16 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 
 					<DrawerBody display="flex" flexDirection="column" gap="1rem" mt="1rem" fontSize="1.5rem">
 						{NAV_LINKS.map(({ label, href }) => {
-							const IS_CURRENT_PAGE = href === window.location.pathname;
+							const IS_CURRENT_PAGE = window.location.pathname.includes(href);
 							return (
 								<Link to={href}>
-									<Box
+									<Text
 										p="0.5rem 1rem"
 										borderRadius="0.375rem"
 										{...(IS_CURRENT_PAGE && { backgroundColor: 'green.100' })}
 									>
 										{label}
-									</Box>
+									</Text>
 								</Link>
 							);
 						})}
@@ -137,10 +137,21 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 					</Heading>
 				</Link>
 
-				<Box display="flex" flexDirection="column" gap="1rem" fontSize="1.5rem">
-					{NAV_LINKS.map(({ label, href }) => (
-						<Link to={href}>{label}</Link>
-					))}
+				<Box display="flex" flexDirection="column" gap="0.5rem" fontSize="1.5rem">
+					{NAV_LINKS.map(({ label, href }) => {
+						const IS_CURRENT_PAGE = window.location.pathname.includes(href);
+						return (
+							<Link to={href}>
+								<Text
+									p="0.5rem"
+									borderRadius="0.375rem"
+									{...(IS_CURRENT_PAGE && { backgroundColor: 'green.100', fontWeight: 'semibold' })}
+								>
+									{label}
+								</Text>
+							</Link>
+						);
+					})}
 				</Box>
 
 				<Box display="flex" flexDirection="column" gap="1rem">
@@ -149,9 +160,7 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 							<Avatar user={currentUser} />
 
 							<Box ml="0.5rem">
-								<Text>
-									{currentUser.firstName} {currentUser.lastName}
-								</Text>
+								<Text>{getFullName(currentUser)}</Text>
 								<Text>({currentUser.email})</Text>
 							</Box>
 						</Box>

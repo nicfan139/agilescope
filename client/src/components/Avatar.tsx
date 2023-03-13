@@ -1,5 +1,6 @@
 import React from 'react';
 import { Avatar as ChakraAvatar, StyleProps } from '@chakra-ui/react';
+import { getFullName } from '@/helpers';
 
 interface IAvatarProps extends StyleProps {
 	user: TUser;
@@ -7,7 +8,7 @@ interface IAvatarProps extends StyleProps {
 }
 
 const Avatar = ({ user, size = 'md', ...otherProps }: IAvatarProps): React.ReactElement => {
-	const FULL_NAME = `${user.firstName} ${user.lastName}`;
+	const FULL_NAME = getFullName(user);
 	return (
 		<ChakraAvatar
 			title={FULL_NAME}

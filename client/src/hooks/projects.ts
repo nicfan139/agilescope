@@ -19,7 +19,7 @@ export const useProjectDetails = (projectId: string) =>
 		return res.data;
 	});
 
-type TProjectCreatePayload = Pick<
+type TProjectPayload = Pick<
 	TProject,
 	'title' | 'description' | 'complexity' | 'priority' | 'status'
 > & {
@@ -29,7 +29,7 @@ type TProjectCreatePayload = Pick<
 export const useProjectCreate = () => {
 	const queryClient = useQueryClient();
 	return useMutation(
-		async (payload: TProjectCreatePayload) => {
+		async (payload: TProjectPayload) => {
 			const res = await axios.post(`${BACKEND_API_URL}/api/projects`, payload, {
 				headers: getHeaders()
 			});
@@ -46,7 +46,7 @@ export const useProjectCreate = () => {
 export const useProjectUpdate = (projectId: string) => {
 	const queryClient = useQueryClient();
 	return useMutation(
-		async (payload: TProjectCreatePayload) => {
+		async (payload: TProjectPayload) => {
 			const res = await axios.put(`${BACKEND_API_URL}/api/projects/${projectId}`, payload, {
 				headers: getHeaders()
 			});

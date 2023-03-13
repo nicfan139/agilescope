@@ -23,6 +23,23 @@ type TProject = {
 	updatedAt: string;
 };
 
+type TTask = {
+	_id: string;
+	title: string;
+	description: string;
+	complexity: TComplexityValue;
+	priority: TPriorityValue;
+	status: TStatusValue;
+	createdBy: TUser;
+	assignedTo: TUser;
+	project?: TProject;
+	subtasks: Array<TUser>;
+	dueDate?: string;
+	completedAt?: string;
+	createdAt: string;
+	updatedAt: string;
+};
+
 type TComplexityValue = 'easy' | 'medium' | 'hard';
 type TPriorityValue = 'low' | 'medium' | 'high' | 'urgent';
 type TStatusValue = 'ready' | 'in-progress' | 'review' | 'completed';

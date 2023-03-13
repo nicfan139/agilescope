@@ -4,7 +4,10 @@ import { USER_FIELDS } from '../utils';
 
 const TaskController = {
 	getTasks: async (_req: Request, res: Response) => {
-		const tasks = await Task.find().populate('createdBy', USER_FIELDS);
+		const tasks = await Task.find()
+			.sort({ createdAt: 'desc' })
+			.populate('createdBy', USER_FIELDS)
+			.populate('assignedTo', USER_FIELDS);
 		if (tasks) {
 			res.status(200).json({
 				tasks
@@ -18,10 +21,10 @@ const TaskController = {
 
 	getTask: async (req: Request, res: Response) => {
 		const { taskId } = req.params;
-		const task = await Task.findById(taskId, null, { lean: true }).populate(
-			'createdBy',
-			USER_FIELDS
-		);
+		const task = await Task.findById(taskId, null, { lean: true })
+			.populate('createdBy', USER_FIELDS)
+			.populate('assignedTo', USER_FIELDS)
+			.populate('project');
 		if (task) {
 			res.status(200).json({
 				task
