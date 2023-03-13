@@ -21,10 +21,10 @@ const ProjectController = {
 
 	getProject: async (req: Request, res: Response) => {
 		const { projectId } = req.params;
-		const project = await Project.findById(projectId, null, { lean: true }).populate(
-			'createdBy',
-			USER_FIELDS
-		);
+		const project = await Project.findById(projectId, null, { lean: true })
+			.populate('createdBy', USER_FIELDS)
+			.populate('members', USER_FIELDS)
+			.populate('tasks');
 		if (project) {
 			res.status(200).json({
 				project

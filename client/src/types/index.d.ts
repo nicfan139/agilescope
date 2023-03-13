@@ -7,6 +7,7 @@ type TUser = {
 };
 
 type TProject = {
+	_id: string;
 	title: string;
 	description: string;
 	complexity: TComplexityValue;

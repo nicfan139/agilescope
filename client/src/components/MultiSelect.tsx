@@ -35,8 +35,8 @@ export const MultiSelect = ({
 		<>
 			{selected.length > 0 && (
 				<Stack direction="row" flexWrap="wrap" mb="0.5rem">
-					{selected.map((option) => (
-						<Tag colorScheme="green">
+					{selected.map((option, index) => (
+						<Tag key={`mutliselect-selected-${index}`} colorScheme="green">
 							{option.label}
 							<TagCloseButton onClick={() => onUnselect(option)} />
 						</Tag>
@@ -49,10 +49,11 @@ export const MultiSelect = ({
 					{placeholder}
 				</MenuButton>
 				<MenuList>
-					{options.map((option) => {
+					{options.map((option, index) => {
 						const IS_SELECTED = selected.some((s) => s.value === option.value);
 						return (
 							<MenuItem
+								key={`multiselect-option-${index}`}
 								onClick={() => !IS_SELECTED && onSelect(option)}
 								justifyContent="space-between"
 							>

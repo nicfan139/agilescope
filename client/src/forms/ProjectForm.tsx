@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { AxiosError } from 'axios';
 import {
+	Box,
 	Button,
 	Divider,
 	Drawer,
@@ -17,20 +18,20 @@ import {
 	Input,
 	Select,
 	Textarea,
-	useToast,
-	Box
+	useToast
 } from '@chakra-ui/react';
 import { MultiSelect, TMultiSelectOption } from '@/components';
 import { COMPLEXITY_OPTIONS, PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import { useUserContext } from '@/contexts';
-import { useUsersList, useProjectCreate } from '@/hooks';
+import { useUsersList, useProjectCreate, useProjectUpdate } from '@/hooks';
 
-interface IAddProjectProps {
+interface IProjectFormProps {
 	isOpen: boolean;
 	onClose: () => void;
+	project?: TProject;
 }
 
-interface IAddProjectForm {
+interface IProjectFormState {
 	title: string;
 	description: string;
 	complexity: TComplexityValue;
@@ -39,18 +40,36 @@ interface IAddProjectForm {
 	members: Array<TMultiSelectOption>;
 }
 
-const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement => {
+const ProjectForm = ({ isOpen, onClose, project }: IProjectFormProps): React.ReactElement => {
 	const { currentUser } = useUserContext();
-	const { handleSubmit, register, reset, setValue, watch } = useForm<IAddProjectForm>({
+	const { handleSubmit, register, reset, setValue, watch } = useForm<IProjectFormState>({
 		defaultValues: {
-			members: []
+			title: project?.title ?? '',
+			description: project?.description ?? '',
+			complexity: project?.complexity,
+			priority: project?.priority,
+			status: project?.status,
+			members:
+				project?.members?.map((m) => ({ label: `${m.firstName} ${m.lastName}`, value: m._id })) ??
+				[]
 		}
 	});
 	const { data: usersListData } = useUsersList();
 	const projectCreate = useProjectCreate();
+	const projectUpdate = useProjectUpdate(project?._id as string);
 	const toast = useToast();
 
-	const onSubmit = async (form: IAddProjectForm) => {
+	const USERS_LIST = useMemo(() => {
+		if (usersListData?.users) {
+			return usersListData?.users?.map((user: TUser) => ({
+				label: `${user.firstName} ${user.lastName}`,
+				value: user._id
+			}));
+		}
+		return [];
+	}, [usersListData]);
+
+	const onSubmit = async (form: IProjectFormState) => {
 		if (form.members.length === 0) {
 			toast({
 				status: 'warning',
@@ -64,10 +83,17 @@ const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement =
 					members: form.members.map((m) => m.value)
 				};
 
-				const data = await projectCreate.mutateAsync(payload);
+				let data;
+				if (project) {
+					data = await projectUpdate.mutateAsync(payload);
+				} else {
+					data = await projectCreate.mutateAsync(payload);
+				}
 
 				if (data.project) {
-					reset();
+					if (!project) {
+						reset();
+					}
 					onClose();
 				} else {
 					toast({
@@ -86,12 +112,6 @@ const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement =
 		}
 	};
 
-	const USERS_LIST =
-		usersListData?.users?.map((user: TUser) => ({
-			label: `${user.firstName} ${user.lastName}`,
-			value: user._id
-		})) ?? [];
-
 	const FORM_STATE = watch();
 
 	return (
@@ -101,7 +121,7 @@ const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement =
 				<DrawerCloseButton size="lg" />
 				<DrawerHeader>
 					<Heading as="h2" size="xl">
-						Add a new project
+						{project ? 'Update' : 'Add a new'} project
 					</Heading>
 				</DrawerHeader>
 
@@ -134,7 +154,9 @@ const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement =
 										{...register('complexity', { required: true })}
 									>
 										{COMPLEXITY_OPTIONS.map(({ label, value }) => (
-											<option value={value}>{label}</option>
+											<option key={`project-complexity-option-${value}`} value={value}>
+												{label}
+											</option>
 										))}
 									</Select>
 								</FormControl>
@@ -146,7 +168,9 @@ const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement =
 										{...register('priority', { required: true })}
 									>
 										{PRIORITY_OPTIONS.map(({ label, value }) => (
-											<option value={value}>{label}</option>
+											<option key={`project-priority-option-${value}`} value={value}>
+												{label}
+											</option>
 										))}
 									</Select>
 								</FormControl>
@@ -155,7 +179,9 @@ const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement =
 									<FormLabel>Status</FormLabel>
 									<Select placeholder="Select status" {...register('status', { required: true })}>
 										{STATUS_OPTIONS.map(({ label, value }) => (
-											<option value={value}>{label}</option>
+											<option key={`project-status-option-${value}`} value={value}>
+												{label}
+											</option>
 										))}
 									</Select>
 								</FormControl>
@@ -202,4 +228,4 @@ const AddProject = ({ isOpen, onClose }: IAddProjectProps): React.ReactElement =
 	);
 };
 
-export default AddProject;
+export default ProjectForm;

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'gatsby';
 import {
-	Avatar,
 	Box,
 	Button,
 	Divider,
@@ -21,6 +20,7 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { NAV_LINKS } from '@/constants';
 import { useUserContext } from '@/contexts';
 import { handleLogout } from '@/helpers';
+import Avatar from './Avatar';
 
 interface ILayoutProps extends StyleProps {
 	children: React.ReactNode;
@@ -73,22 +73,22 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 						</Heading>
 					</DrawerHeader>
 
-					<Divider />
+					{currentUser && (
+						<>
+							<Divider />
 
-					<Box display="flex" p="1rem">
-						<Avatar
-							size="md"
-							name={`${currentUser?.firstName} ${currentUser?.lastName}`}
-							src={currentUser?.avatarUrl}
-						/>
+							<Box display="flex" p="1rem">
+								<Avatar user={currentUser} />
 
-						<Box ml="0.5rem">
-							<Text>
-								{currentUser?.firstName} {currentUser?.lastName}
-							</Text>
-							<Text>({currentUser?.email})</Text>
-						</Box>
-					</Box>
+								<Box ml="0.5rem">
+									<Text>
+										{currentUser.firstName} {currentUser.lastName}
+									</Text>
+									<Text>({currentUser.email})</Text>
+								</Box>
+							</Box>
+						</>
+					)}
 
 					<Divider />
 
@@ -144,20 +144,18 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 				</Box>
 
 				<Box display="flex" flexDirection="column" gap="1rem">
-					<Box display="flex">
-						<Avatar
-							size="md"
-							name={`${currentUser?.firstName} ${currentUser?.lastName}`}
-							src={currentUser?.avatarUrl}
-						/>
+					{currentUser && (
+						<Box display="flex">
+							<Avatar user={currentUser} />
 
-						<Box ml="0.5rem">
-							<Text>
-								{currentUser?.firstName} {currentUser?.lastName}
-							</Text>
-							<Text>({currentUser?.email})</Text>
+							<Box ml="0.5rem">
+								<Text>
+									{currentUser.firstName} {currentUser.lastName}
+								</Text>
+								<Text>({currentUser.email})</Text>
+							</Box>
 						</Box>
-					</Box>
+					)}
 
 					<Button onClick={handleLogout}>Logout</Button>
 				</Box>

@@ -15,12 +15,10 @@ import { useAuthValidateToken } from '@/hooks';
 
 interface IUserContext {
 	currentUser: TUser | null;
-	setCurrentUser: (user: TUser) => void;
 }
 
 const UserContext = createContext<IUserContext>({
-	currentUser: null,
-	setCurrentUser: () => {}
+	currentUser: null
 });
 
 const IS_PUBLIC_ROUTE = PUBLIC_ROUTES.includes(window.location.pathname);
@@ -31,15 +29,19 @@ export const UserContextProvider = ({ children }: { children: ReactNode }): Reac
 	const authValidateToken = useAuthValidateToken();
 	const toast = useToast();
 
+	const setLogout = () => {
+		setTimeout(() => {
+			handleLogout();
+		}, 4000);
+	};
+
 	const validateAccessToken = async () => {
 		try {
 			const res = await authValidateToken.mutateAsync();
 			if (res.data.isTokenValid) {
 				setCurrentUser(res.data.user);
 			} else {
-				setTimeout(() => {
-					handleLogout();
-				}, 4000);
+				setLogout();
 				toast({
 					status: 'error',
 					title: 'Unable to validate user credentials',
@@ -53,6 +55,7 @@ export const UserContextProvider = ({ children }: { children: ReactNode }): Reac
 				status: 'error',
 				title: data.errorMessage
 			});
+			setLogout();
 		}
 	};
 
@@ -76,8 +79,7 @@ export const UserContextProvider = ({ children }: { children: ReactNode }): Reac
 	return (
 		<UserContext.Provider
 			value={{
-				currentUser,
-				setCurrentUser
+				currentUser
 			}}
 		>
 			{children}
