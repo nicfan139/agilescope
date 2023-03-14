@@ -17,11 +17,11 @@ export const sprintSchema = new Schema<TSprint>({
 	tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
 	startDate: {
 		type: String,
-		required: false
+		required: true
 	},
 	endDate: {
 		type: String,
-		required: false
+		required: true
 	}
 });
 

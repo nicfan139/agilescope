@@ -28,7 +28,7 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	if (isLoading || !data) {
-		return <Spinner size="xl" />;
+		return <Spinner size="xl" color="green" />;
 	}
 
 	const TASK_DETAILS = data?.task as TTask;

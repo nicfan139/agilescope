@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Task } from '../models';
+import { Task, Sprint } from '../models';
 import { USER_FIELDS } from '../utils';
 
 const TaskController = {
@@ -24,7 +24,8 @@ const TaskController = {
 		const task = await Task.findById(taskId, null, { lean: true })
 			.populate('createdBy', USER_FIELDS)
 			.populate('assignedTo', USER_FIELDS)
-			.populate('project');
+			.populate('project')
+			.populate('sprint');
 		if (task) {
 			res.status(200).json({
 				task
@@ -38,7 +39,15 @@ const TaskController = {
 
 	createTask: async (req: Request, res: Response) => {
 		const task = await Task.create(req.body);
+
 		if (task) {
+			const sprint = await Sprint.findById(req.body.sprint);
+			if (sprint && !sprint.tasks.some((t) => t._id === task.id)) {
+				await Sprint.findByIdAndUpdate(sprint._id, {
+					tasks: [...sprint.tasks, task.id]
+				});
+			}
+
 			res.status(201).json({
 				task
 			});
@@ -87,7 +96,15 @@ const TaskController = {
 				select: USER_FIELDS
 			}
 		});
+
 		if (task) {
+			const sprint = await Sprint.findById(req.body.sprint);
+			if (sprint && !sprint.tasks.some((t) => t._id === task.id)) {
+				await Sprint.findByIdAndUpdate(sprint._id, {
+					tasks: [...sprint.tasks, taskId]
+				});
+			}
+
 			res.status(200).json({ task });
 		} else {
 			res.status(500).json({

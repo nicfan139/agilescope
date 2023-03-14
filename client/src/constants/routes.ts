@@ -9,10 +9,10 @@ export const NAV_LINKS = [
 		label: 'Projects',
 		href: '/projects'
 	},
-	// {
-	// 	label: 'Sprints',
-	// 	href: '/sprints'
-	// },
+	{
+		label: 'Sprints',
+		href: '/sprints'
+	},
 	{
 		label: 'Tasks',
 		href: '/tasks'

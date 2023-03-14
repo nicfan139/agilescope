@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { AxiosError } from 'axios';
+import dayjs from 'dayjs';
 import {
 	Box,
 	Drawer,
@@ -18,7 +19,13 @@ import DatePicker from 'react-datepicker';
 import { COMPLEXITY_OPTIONS, PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import { useUserContext } from '@/contexts';
 import { getFullName } from '@/helpers';
-import { useUsersList, useProjectsList, useTaskCreate, useTaskUpdate } from '@/hooks';
+import {
+	useUsersList,
+	useProjectsList,
+	useSprintsList,
+	useTaskCreate,
+	useTaskUpdate
+} from '@/hooks';
 import { FormHeader, FormFooter } from './shared';
 
 interface ITaskFormProps {
@@ -35,8 +42,14 @@ interface ITaskFormState {
 	status: TStatusValue;
 	assignedTo: string;
 	project?: string;
+	sprint?: string;
 	dueDate?: Date | null;
 	completedAt?: Date | null;
+}
+
+interface ISelectOption {
+	label: string;
+	value: string;
 }
 
 const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement => {
@@ -50,12 +63,14 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 			status: task?.status,
 			assignedTo: task?.assignedTo?._id,
 			project: task?.project?._id,
+			sprint: task?.sprint?._id,
 			dueDate: task?.dueDate ? new Date(task.dueDate) : null,
 			completedAt: task?.completedAt ? new Date(task.completedAt) : null
 		}
 	});
 	const { data: usersListData } = useUsersList();
 	const { data: projectsListData } = useProjectsList();
+	const { data: sprintsListData } = useSprintsList();
 	const taskCreate = useTaskCreate();
 	const taskUpdate = useTaskUpdate(task?._id as string);
 	const toast = useToast();
@@ -80,15 +95,41 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 		return [];
 	}, [projectsListData]);
 
+	const SPRINTS_LIST = useMemo(() => {
+		if (sprintsListData?.sprints) {
+			return sprintsListData?.sprints?.map((sprint: TSprint) => ({
+				label: `${sprint.name} (${dayjs(sprint.startDate).format('YYYY-MM-DD')} to ${dayjs(
+					sprint.endDate
+				).format('YYYY-MM-DD')})`,
+				value: sprint._id
+			}));
+		}
+		return [];
+	}, [sprintsListData]);
+
 	const onSubmit = async (form: ITaskFormState) => {
 		try {
 			const payload = {
-				...form,
-				createdBy: currentUser?._id as string,
+				title: form.title,
+				description: form.description,
+				complexity: form.complexity,
+				priority: form.priority,
+				status: form.status,
+				assignedTo: form.assignedTo,
+				...(form.project && {
+					project: form.project
+				}),
+				...(form.sprint && {
+					sprint: form.sprint
+				}),
 				...(form.dueDate && {
 					dueDate: form.dueDate.toISOString()
-				})
-			};
+				}),
+				...(form.completedAt && {
+					completedAt: form.completedAt.toISOString()
+				}),
+				createdBy: currentUser?._id as string
+			} as TTaskPayload;
 
 			let data;
 			if (task) {
@@ -190,7 +231,7 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 							<FormControl isRequired>
 								<FormLabel>Assigned to</FormLabel>
 								<Select placeholder="Select user" {...register('assignedTo', { required: true })}>
-									{USERS_LIST.map(({ label, value }: { label: string; value: string }) => (
+									{USERS_LIST.map(({ label, value }: ISelectOption) => (
 										<option key={`task-assginee-option-${value}`} value={value}>
 											{label}
 										</option>
@@ -200,9 +241,20 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 
 							<FormControl>
 								<FormLabel>Project</FormLabel>
-								<Select placeholder="Select project" {...register('project', { required: true })}>
-									{PROJECTS_LIST.map(({ label, value }: { label: string; value: string }) => (
+								<Select placeholder="Select project" {...register('project')}>
+									{PROJECTS_LIST.map(({ label, value }: ISelectOption) => (
 										<option key={`task-project-option-${value}`} value={value}>
+											{label}
+										</option>
+									))}
+								</Select>
+							</FormControl>
+
+							<FormControl>
+								<FormLabel>Sprint</FormLabel>
+								<Select placeholder="Select sprint" {...register('sprint')}>
+									{SPRINTS_LIST.map(({ label, value }: ISelectOption) => (
+										<option key={`task-sprint-option-${value}`} value={value}>
 											{label}
 										</option>
 									))}

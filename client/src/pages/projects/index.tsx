@@ -44,7 +44,7 @@ const ProjectsPage = (): React.ReactElement => {
 				<ProjectForm {...{ isOpen, onClose }} />
 
 				{isLoading || !data ? (
-					<Spinner size="xl" />
+					<Spinner size="xl" color="green" />
 				) : (
 					<Box>
 						{PROJECTS_LIST.length > 0 ? (

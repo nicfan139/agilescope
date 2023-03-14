@@ -61,6 +61,8 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 				right="2rem"
 				size="lg"
 				boxShadow="md"
+				fontWeight="bold"
+				fontSize="xl"
 			>
 				Menu
 			</Button>

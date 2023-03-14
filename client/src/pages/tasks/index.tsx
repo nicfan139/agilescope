@@ -34,7 +34,7 @@ const TasksPage = (): React.ReactElement => {
 				<TaskForm {...{ isOpen, onClose }} />
 
 				{isLoading || !data ? (
-					<Spinner size="xl" />
+					<Spinner size="xl" color="green" />
 				) : (
 					<Box>
 						{TASKS_LIST.length > 0 ? (

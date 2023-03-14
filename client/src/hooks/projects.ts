@@ -19,13 +19,6 @@ export const useProjectDetails = (projectId: string) =>
 		return res.data;
 	});
 
-type TProjectPayload = Pick<
-	TProject,
-	'title' | 'description' | 'complexity' | 'priority' | 'status'
-> & {
-	createdBy: string;
-};
-
 export const useProjectCreate = () => {
 	const queryClient = useQueryClient();
 	return useMutation(

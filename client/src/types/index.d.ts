@@ -33,9 +33,20 @@ type TTask = {
 	createdBy: TUser;
 	assignedTo: TUser;
 	project?: TProject;
+	sprint?: TSprint;
 	subtasks: Array<TUser>;
 	dueDate?: string;
 	completedAt?: string;
+	createdAt: string;
+	updatedAt: string;
+};
+
+type TSprint = {
+	_id: string;
+	name: string;
+	tasks: Array<TTask>;
+	startDate: string;
+	endDate: string;
 	createdAt: string;
 	updatedAt: string;
 };

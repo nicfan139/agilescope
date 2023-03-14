@@ -75,7 +75,7 @@ const ProjectForm = ({ isOpen, onClose, project }: IProjectFormProps): React.Rea
 					...form,
 					createdBy: currentUser?._id as string,
 					members: form.members.map((m) => m.value)
-				};
+				} as TProjectPayload;
 
 				let data;
 				if (project) {

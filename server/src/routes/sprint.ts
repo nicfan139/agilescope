@@ -6,8 +6,6 @@ const router = Router();
 
 router.get('/sprints', checkAuth, SprintController.getSprints);
 
-router.get('/sprints/:sprintId', checkAuth, SprintController.getSprint);
-
 router.post('/sprints', checkAuth, SprintController.createSprint);
 
 router.put('/sprints/:sprintId', checkAuth, SprintController.updateSprint);

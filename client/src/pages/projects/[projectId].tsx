@@ -28,7 +28,7 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	if (isLoading || !data) {
-		return <Spinner size="xl" />;
+		return <Spinner size="xl" color="green" />;
 	}
 
 	const PROJECT_DETAILS = data?.project as TProject;

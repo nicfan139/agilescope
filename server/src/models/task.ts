@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { TProject } from './project';
+import { TSprint } from './sprint';
 import { TUser } from './user';
 
 export type TTask = {
@@ -12,6 +13,7 @@ export type TTask = {
 	createdBy: TUser;
 	assignedTo: TUser;
 	project?: TProject;
+	sprint?: TSprint;
 	completedAt: string;
 	subtasks: Array<TUser>;
 	dueDate?: string;
@@ -64,6 +66,11 @@ export const taskSchema = new Schema<TTask>(
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: 'Project',
+			required: false
+		},
+		sprint: {
+			type: Schema.Types.ObjectId,
+			ref: 'Sprint',
 			required: false
 		},
 		completedAt: {

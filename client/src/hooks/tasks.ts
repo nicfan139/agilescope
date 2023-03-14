@@ -19,10 +19,6 @@ export const useTaskDetails = (taskId: string) =>
 		return res.data;
 	});
 
-type TTaskPayload = Pick<TTask, 'title' | 'description' | 'complexity' | 'priority' | 'status'> & {
-	createdBy: string;
-};
-
 export const useTaskCreate = () => {
 	const queryClient = useQueryClient();
 	return useMutation(

@@ -3,7 +3,14 @@ import { Sprint } from '../models';
 
 const SprintController = {
 	getSprints: async (_req: Request, res: Response) => {
-		const sprints = await Sprint.find();
+		const sprints = await Sprint.find()
+			.sort({ createdAt: 'desc' })
+			.populate({
+				path: 'tasks',
+				populate: {
+					path: 'assignedTo'
+				}
+			});
 		if (sprints) {
 			res.status(200).json({
 				sprints
@@ -11,20 +18,6 @@ const SprintController = {
 		} else {
 			res.status(500).json({
 				errorMessage: 'Unable to return sprints'
-			});
-		}
-	},
-
-	getSprint: async (req: Request, res: Response) => {
-		const { sprintId } = req.params;
-		const sprint = await Sprint.findById(sprintId, null, { lean: true });
-		if (sprint) {
-			res.status(200).json({
-				sprint
-			});
-		} else {
-			res.status(400).json({
-				errorMessage: `Sprint #${sprintId} does not exist`
 			});
 		}
 	},
