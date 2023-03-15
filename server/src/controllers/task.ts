@@ -7,6 +7,7 @@ const TaskController = {
 		const tasks = await Task.find()
 			.sort({ createdAt: 'desc' })
 			.populate('createdBy', USER_FIELDS)
+			.populate('project')
 			.populate('assignedTo', USER_FIELDS);
 		if (tasks) {
 			res.status(200).json({

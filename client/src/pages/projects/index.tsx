@@ -58,14 +58,15 @@ const ProjectsPage = (): React.ReactElement => {
 								{PROJECTS_LIST.map((project: TProject) => (
 									<Link key={`project-card-${project._id}`} to={`/projects/${project._id}`}>
 										<Box
-											w={{
-												base: '100%',
-												md: '400px'
-											}}
+											w="100%"
 											display="flex"
 											justifyContent="space-between"
 											p="1rem"
 											border="1px solid lightgrey"
+											transition="all 0.3s"
+											_hover={{
+												boxShadow: 'lg'
+											}}
 										>
 											<Stack direction="column">
 												<Text fontSize="2xl" fontWeight="semibold">
@@ -86,7 +87,7 @@ const ProjectsPage = (): React.ReactElement => {
 												<Text>Tasks: {project.tasks.length}</Text>
 											</Stack>
 
-											<Stack justifyContent="space-between" alignItems="flex-end">
+											<Stack justifyContent="space-between" alignItems="flex-end" ml="2rem">
 												<Stack alignItems="flex-end">
 													<Text>
 														Complexity:{' '}

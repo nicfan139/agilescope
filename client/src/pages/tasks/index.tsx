@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeadFC, navigate } from 'gatsby';
+import { HeadFC, Link } from 'gatsby';
 import {
 	Badge,
 	Box,
@@ -59,22 +59,28 @@ const TasksPage = (): React.ReactElement => {
 									<Thead>
 										<Tr>
 											<Th>Task</Th>
+											<Th>Project</Th>
 											<Th>Assigned to</Th>
 											<Th>Created on</Th>
-											<Th>Due date</Th>
 											<Th>Priority</Th>
 											<Th>Status</Th>
 										</Tr>
 									</Thead>
 									<Tbody>
 										{TASKS_LIST.map((task: TTask) => (
-											<Tr
-												key={`task-row-${task._id}`}
-												onClick={() => navigate(`/tasks/${task._id}`)}
-												_hover={{ backgroundColor: 'gray.100', cursor: 'pointer' }}
-											>
+											<Tr key={`task-row-${task._id}`} _hover={{ backgroundColor: 'gray.100' }}>
 												<Td>
-													<Text>{task.title}</Text>
+													<Link to={`/tasks/${task._id}`}>
+														<Text _hover={{ textDecoration: 'underline' }}>{task.title}</Text>
+													</Link>
+												</Td>
+
+												<Td>
+													<Link to={`/projects/${task.project._id}`}>
+														<Text _hover={{ textDecoration: 'underline' }}>
+															{task.project.title}
+														</Text>
+													</Link>
 												</Td>
 
 												<Td>
@@ -82,8 +88,6 @@ const TasksPage = (): React.ReactElement => {
 												</Td>
 
 												<Td>{dayjs(task.createdAt).format(DATE_FORMAT)}</Td>
-
-												<Td>{task.dueDate ? dayjs(task.dueDate).format(DATE_FORMAT) : '-'}</Td>
 
 												<Td>
 													<Badge colorScheme={getPriorityColour(task.priority)}>
