@@ -7,10 +7,6 @@ dotenv.config({
 });
 
 const config: GatsbyConfig = {
-	siteMetadata: {
-		title: `agilescope-client`,
-		siteUrl: `https://agilescope-client.vercel.app`
-	},
 	trailingSlash: 'never',
 	graphqlTypegen: true,
 	plugins: [
@@ -47,6 +43,9 @@ const config: GatsbyConfig = {
 				},
 				extensions: []
 			}
+		},
+		{
+			resolve: `gatsby-plugin-netlify`
 		}
 	]
 };

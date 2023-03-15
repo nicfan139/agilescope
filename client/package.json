@@ -28,6 +28,7 @@
 		"framer-motion": "^10.2.3",
 		"gatsby": "^5.7.0",
 		"gatsby-plugin-alias-imports": "^1.0.5",
+		"gatsby-plugin-netlify": "^5.1.0",
 		"i": "^0.3.7",
 		"npm": "^9.6.1",
 		"react": "^18.2.0",
