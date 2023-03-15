@@ -12,4 +12,6 @@ router.post('/users', UserController.createUser);
 
 router.put('/users/:userId', checkAuth, UserController.updateUser);
 
+router.get('/users/:userId/dashboard', checkAuth, UserController.getUserDashboard);
+
 export default router;

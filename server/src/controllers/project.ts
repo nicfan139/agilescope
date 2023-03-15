@@ -26,7 +26,7 @@ const ProjectController = {
 			.populate('members', USER_FIELDS)
 			.populate({
 				path: 'tasks',
-				populate: 'assignedTo'
+				populate: ['assignedTo', 'sprint']
 			});
 		if (project) {
 			res.status(200).json({

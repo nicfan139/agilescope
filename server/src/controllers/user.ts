@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
-import { User } from '../models';
+import { User, Project, Task } from '../models';
 import { sendEmail } from '../utils';
 
 dotenv.config();
@@ -103,6 +103,32 @@ const UserController = {
 		} else {
 			res.status(500).json({
 				errorMessage: 'Unable to update user'
+			});
+		}
+	},
+
+	getUserDashboard: async (req: Request, res: Response) => {
+		const { userId } = req.params;
+		console.log(userId);
+
+		// Collect project.members with userId
+		const projects = await Project.find({
+			members: userId
+		});
+
+		// Collect task.assignedTo with userId
+		const tasks = await Task.find({
+			assignedTo: userId
+		});
+
+		if (projects) {
+			res.status(200).json({
+				projects,
+				tasks
+			});
+		} else {
+			res.status(500).json({
+				errorMessage: 'Unable to return user dashboard data'
 			});
 		}
 	}

@@ -10,3 +10,17 @@ export const useUsersList = () =>
 		});
 		return res.data;
 	});
+
+export const useUserDashboardData = (userId?: string) =>
+	useQuery(
+		['GET_USER_DASHBOARD_DATA'],
+		async () => {
+			const res = await axios.get(`${BACKEND_API_URL}/api/users/${userId}/dashboard`, {
+				headers: getHeaders()
+			});
+			return res.data;
+		},
+		{
+			enabled: Boolean(userId)
+		}
+	);

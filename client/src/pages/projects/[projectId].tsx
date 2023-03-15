@@ -152,6 +152,7 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 									<Tr>
 										<Th>Task</Th>
 										<Th>Assigned to</Th>
+										<Th>Sprint</Th>
 										<Th>Priority</Th>
 										<Th>Status</Th>
 										<Th>Due date</Th>
@@ -167,6 +168,9 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 											</Td>
 											<Td>
 												<Avatar user={task.assignedTo} size="sm" showName />
+											</Td>
+											<Td>
+												<Link to={`/sprints?sprintId=${task.sprint._id}`}>{task.sprint.name}</Link>
 											</Td>
 											<Td>
 												<Badge colorScheme={getPriorityColour(task.priority)}>
