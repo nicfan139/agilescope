@@ -1,12 +1,28 @@
 import React from 'react';
-import { HeadFC, Link } from 'gatsby';
-import { Box, Button, Heading, Spinner, Stack, Text, useDisclosure } from '@chakra-ui/react';
+import { HeadFC, navigate } from 'gatsby';
+import {
+	Badge,
+	Box,
+	Button,
+	Heading,
+	Spinner,
+	Table,
+	TableContainer,
+	Thead,
+	Th,
+	Td,
+	Tr,
+	Tbody,
+	Text,
+	useDisclosure
+} from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { Avatar, LayoutDashboard } from '@/components';
+import { DATE_FORMAT } from '@/constants';
 import { TaskForm } from '@/forms';
 import { useTasksList } from '@/hooks/tasks';
-import { getFullName } from '@/helpers';
+import { getPriorityColour, getStatusColour } from '@/helpers';
 
 export const Head: HeadFC = () => <title>Tasks | AgileScope</title>;
 
@@ -38,47 +54,51 @@ const TasksPage = (): React.ReactElement => {
 				) : (
 					<Box>
 						{TASKS_LIST.length > 0 ? (
-							<Box
-								display="flex"
-								flexDirection={{ base: 'column', row: 'row' }}
-								flexWrap="wrap"
-								gap="1.5rem"
-							>
-								{TASKS_LIST.map((task: TTask) => (
-									<Link key={`task-card-${task._id}`} to={`/tasks/${task._id}`}>
-										<Box
-											w={{
-												base: '100%',
-												md: '400px'
-											}}
-											display="flex"
-											justifyContent="space-between"
-											p="1rem"
-											border="1px solid lightgrey"
-										>
-											<Stack direction="column">
-												<Text fontSize="2xl" fontWeight="semibold">
-													{task.title}
-												</Text>
+							<TableContainer>
+								<Table variant="simple">
+									<Thead>
+										<Tr>
+											<Th>Task</Th>
+											<Th>Assigned to</Th>
+											<Th>Created on</Th>
+											<Th>Due date</Th>
+											<Th>Priority</Th>
+											<Th>Status</Th>
+										</Tr>
+									</Thead>
+									<Tbody>
+										{TASKS_LIST.map((task: TTask) => (
+											<Tr
+												key={`task-row-${task._id}`}
+												onClick={() => navigate(`/tasks/${task._id}`)}
+												_hover={{ backgroundColor: 'gray.100', cursor: 'pointer' }}
+											>
+												<Td>
+													<Text>{task.title}</Text>
+												</Td>
 
-												<Text>Created on: {dayjs(task.createdAt).format('YYYY-MM-DD')}</Text>
+												<Td>
+													<Avatar user={task.assignedTo} size="sm" showName />
+												</Td>
 
-												{task.dueDate && (
-													<Text>Due date: {dayjs(task.createdAt).format('YYYY-MM-DD')}</Text>
-												)}
+												<Td>{dayjs(task.createdAt).format(DATE_FORMAT)}</Td>
 
-												<Stack direction="row" alignItems="center">
-													<Text>Assigned to:</Text>
-													<Stack direction="row" alignItems="center">
-														<Avatar user={task.assignedTo} size="sm" />
-														<Text>{getFullName(task.assignedTo)}</Text>
-													</Stack>
-												</Stack>
-											</Stack>
-										</Box>
-									</Link>
-								))}
-							</Box>
+												<Td>{task.dueDate ? dayjs(task.dueDate).format(DATE_FORMAT) : '-'}</Td>
+
+												<Td>
+													<Badge colorScheme={getPriorityColour(task.priority)}>
+														{task.priority}
+													</Badge>
+												</Td>
+
+												<Td>
+													<Badge colorScheme={getStatusColour(task.status)}>{task.status}</Badge>
+												</Td>
+											</Tr>
+										))}
+									</Tbody>
+								</Table>
+							</TableContainer>
 						) : (
 							<Text>No projects to display. Create one to get started!</Text>
 						)}

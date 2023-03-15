@@ -162,8 +162,24 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 							<Avatar user={currentUser} />
 
 							<Box ml="0.5rem">
-								<Text>{getFullName(currentUser)}</Text>
-								<Text>({currentUser.email})</Text>
+								<Text
+									title={getFullName(currentUser)}
+									width="160px"
+									overflow="hidden"
+									whiteSpace="nowrap"
+									textOverflow="ellipsis"
+								>
+									{getFullName(currentUser)}
+								</Text>
+								<Text
+									title={currentUser.email}
+									width="160px"
+									overflow="hidden"
+									whiteSpace="nowrap"
+									textOverflow="ellipsis"
+								>
+									({currentUser.email})
+								</Text>
 							</Box>
 						</Box>
 					)}

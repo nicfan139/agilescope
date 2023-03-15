@@ -7,9 +7,7 @@ const SprintController = {
 			.sort({ createdAt: 'desc' })
 			.populate({
 				path: 'tasks',
-				populate: {
-					path: 'assignedTo'
-				}
+				populate: ['assignedTo', 'project']
 			});
 		if (sprints) {
 			res.status(200).json({

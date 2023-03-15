@@ -15,7 +15,7 @@ type TProject = {
 	status: TStatusValue;
 	createdBy: TUser;
 	members: Array<TUser>;
-	tasks: Array<unknown>;
+	tasks: Array<TTask>;
 	startedAt?: string;
 	completedAt?: string;
 	dueDate?: string;

@@ -16,7 +16,7 @@ import {
 	useToast
 } from '@chakra-ui/react';
 import DatePicker from 'react-datepicker';
-import { COMPLEXITY_OPTIONS, PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants';
+import { DATE_FORMAT, COMPLEXITY_OPTIONS, PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import { useUserContext } from '@/contexts';
 import { getFullName } from '@/helpers';
 import {
@@ -98,9 +98,9 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 	const SPRINTS_LIST = useMemo(() => {
 		if (sprintsListData?.sprints) {
 			return sprintsListData?.sprints?.map((sprint: TSprint) => ({
-				label: `${sprint.name} (${dayjs(sprint.startDate).format('YYYY-MM-DD')} to ${dayjs(
+				label: `${sprint.name} (${dayjs(sprint.startDate).format(DATE_FORMAT)} to ${dayjs(
 					sprint.endDate
-				).format('YYYY-MM-DD')})`,
+				).format(DATE_FORMAT)})`,
 				value: sprint._id
 			}));
 		}

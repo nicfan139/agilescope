@@ -14,6 +14,7 @@ import {
 import { AddIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { Avatar, LayoutDashboard } from '@/components';
+import { DATE_FORMAT } from '@/constants';
 import { ProjectForm } from '@/forms';
 import { getComplexityColour, getPriorityColour, getStatusColour } from '@/helpers';
 import { useProjectsList } from '@/hooks';
@@ -71,7 +72,7 @@ const ProjectsPage = (): React.ReactElement => {
 													{project.title}
 												</Text>
 
-												<Text>Created on: {dayjs(project.createdAt).format('YYYY-MM-DD')}</Text>
+												<Text>Created on: {dayjs(project.createdAt).format(DATE_FORMAT)}</Text>
 
 												<Stack direction="row" alignItems="center">
 													<Text>Members:</Text>

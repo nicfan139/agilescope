@@ -24,7 +24,10 @@ const ProjectController = {
 		const project = await Project.findById(projectId, null, { lean: true })
 			.populate('createdBy', USER_FIELDS)
 			.populate('members', USER_FIELDS)
-			.populate('tasks');
+			.populate({
+				path: 'tasks',
+				populate: 'assignedTo'
+			});
 		if (project) {
 			res.status(200).json({
 				project

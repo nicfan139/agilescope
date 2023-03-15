@@ -13,7 +13,8 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
-import { LayoutDashboard } from '@/components';
+import { Avatar, LayoutDashboard } from '@/components';
+import { DATE_FORMAT } from '@/constants';
 import { useUserContext } from '@/contexts';
 import { TaskForm } from '@/forms';
 import { useTaskDetails } from '@/hooks';
@@ -60,7 +61,7 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 						<Box fontSize="xs" fontStyle="italic">
 							<Text>
 								Created by {getFullName(TASK_OWNER)} on{' '}
-								{dayjs(TASK_DETAILS.createdAt).format('YYYY-MM-DD')}
+								{dayjs(TASK_DETAILS.createdAt).format(DATE_FORMAT)}
 							</Text>
 							<Text>
 								Last updated on {dayjs(TASK_DETAILS.updatedAt).format('YYYY-MM-DD hh:mm a')}
@@ -83,12 +84,20 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 				<TaskForm {...{ isOpen, onClose, task: TASK_DETAILS }} />
 
 				<Text fontSize="lg" color="gray.500" mb="1rem">
-					{TASK_DETAILS.description}
+					{TASK_DETAILS.description || 'No description for this task'}
 				</Text>
 
 				<Divider />
 
-				<Box display="flex" flexWrap="wrap" gap={{ base: '2rem', md: '3rem' }} my="1rem">
+				<Box display="flex" flexWrap="wrap" gap={{ base: '2rem', md: '4rem' }} my="1rem">
+					<Stack justifyContent="space-between" alignItems="flex-start">
+						<Heading as="h3" fontSize="xl">
+							Assigned to
+						</Heading>
+
+						<Avatar user={TASK_DETAILS.assignedTo} size="sm" showName />
+					</Stack>
+
 					<Stack justifyContent="space-between" alignItems="flex-start">
 						<Heading as="h3" fontSize="xl">
 							Project
@@ -106,21 +115,11 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 							{TASK_DETAILS.sprint.name}
 						</Link>
 					</Stack>
+				</Box>
 
-					<Stack justifyContent="space-between" alignItems="flex-start">
-						<Heading as="h3" fontSize="xl">
-							Due date
-						</Heading>
+				<Divider />
 
-						{TASK_DETAILS.dueDate ? (
-							<Text>{dayjs(TASK_DETAILS.dueDate).format('YYYY-MM-DD')}</Text>
-						) : (
-							<Text color="gray.500" fontStyle="italic">
-								N/A
-							</Text>
-						)}
-					</Stack>
-
+				<Box display="flex" flexWrap="wrap" gap={{ base: '2rem', md: '4rem' }} my="1rem">
 					<Stack justifyContent="space-between" alignItems="flex-start">
 						<Heading as="h3" fontSize="xl">
 							Complexity
@@ -146,18 +145,26 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 						<Badge colorScheme={getStatusColour(TASK_DETAILS.status)}>{TASK_DETAILS.status}</Badge>
 					</Stack>
 
+					<Stack justifyContent="space-between" alignItems="flex-start">
+						<Heading as="h3" fontSize="xl">
+							Due date
+						</Heading>
+
+						<Text>
+							{TASK_DETAILS.dueDate ? dayjs(TASK_DETAILS.dueDate).format(DATE_FORMAT) : '-'}
+						</Text>
+					</Stack>
+
 					{TASK_DETAILS.completedAt && (
 						<Stack justifyContent="space-between" alignItems="flex-start">
 							<Heading as="h3" fontSize="xl">
 								Completed at
 							</Heading>
 
-							<Text>{dayjs(TASK_DETAILS.completedAt).format('YYYY-MM-DD')}</Text>
+							<Text>{dayjs(TASK_DETAILS.completedAt).format(DATE_FORMAT)}</Text>
 						</Stack>
 					)}
 				</Box>
-
-				<Divider />
 			</LayoutDashboard>
 		</main>
 	);

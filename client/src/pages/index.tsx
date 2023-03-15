@@ -3,6 +3,7 @@ import type { HeadFC, PageProps } from 'gatsby';
 import { Heading, Stack, Text } from '@chakra-ui/react';
 import dayjs from 'dayjs';
 import { LayoutDashboard } from '@/components';
+import { DATE_FORMAT } from '@/constants';
 
 export const Head: HeadFC = () => <title>Dashboard | AgileScope</title>;
 
@@ -16,7 +17,7 @@ const DashboardPage = ({}: PageProps): React.ReactElement => {
 
 				<Stack direction="row" mb="1rem">
 					<Text>Today's date:</Text>
-					<Text fontWeight="semibold">{dayjs().format('YYYY-MM-DD')}</Text>
+					<Text fontWeight="semibold">{dayjs().format(DATE_FORMAT)}</Text>
 				</Stack>
 			</LayoutDashboard>
 		</main>

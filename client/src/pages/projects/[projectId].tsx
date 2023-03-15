@@ -8,12 +8,20 @@ import {
 	Heading,
 	Spinner,
 	Stack,
+	Table,
+	TableContainer,
+	Thead,
+	Th,
+	Td,
+	Tr,
+	Tbody,
 	Text,
 	useDisclosure
 } from '@chakra-ui/react';
 import { EditIcon, ChevronLeftIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
 import { Avatar, LayoutDashboard } from '@/components';
+import { DATE_FORMAT } from '@/constants';
 import { useUserContext } from '@/contexts';
 import { ProjectForm } from '@/forms';
 import { useProjectDetails } from '@/hooks';
@@ -60,7 +68,7 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 						<Box fontSize="xs" fontStyle="italic">
 							<Text>
 								Created by {getFullName(PROJECT_OWNER)} on{' '}
-								{dayjs(PROJECT_DETAILS.createdAt).format('YYYY-MM-DD')}
+								{dayjs(PROJECT_DETAILS.createdAt).format(DATE_FORMAT)}
 							</Text>
 							<Text>
 								Last updated on {dayjs(PROJECT_DETAILS.updatedAt).format('YYYY-MM-DD hh:mm a')}
@@ -83,7 +91,7 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 				<ProjectForm {...{ isOpen, onClose, project: PROJECT_DETAILS }} />
 
 				<Text fontSize="lg" color="gray.500" mb="1rem">
-					{PROJECT_DETAILS.description}
+					{PROJECT_DETAILS.description || 'No description for this task'}
 				</Text>
 
 				<Divider />
@@ -136,6 +144,53 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 					<Heading as="h3" fontSize="xl">
 						Tasks ({PROJECT_DETAILS.tasks.length})
 					</Heading>
+
+					{PROJECT_DETAILS.tasks.length > 0 ? (
+						<TableContainer>
+							<Table variant="simple">
+								<Thead>
+									<Tr>
+										<Th>Task</Th>
+										<Th>Assigned to</Th>
+										<Th>Priority</Th>
+										<Th>Status</Th>
+										<Th>Due date</Th>
+									</Tr>
+								</Thead>
+								<Tbody>
+									{PROJECT_DETAILS.tasks.map((task) => (
+										<Tr _hover={{ backgroundColor: 'gray.100' }}>
+											<Td>
+												<Link to={`/tasks/${task._id}`}>
+													<Text>{task.title}</Text>
+												</Link>
+											</Td>
+											<Td>
+												<Avatar user={task.assignedTo} size="sm" showName />
+											</Td>
+											<Td>
+												<Badge colorScheme={getPriorityColour(task.priority)}>
+													{task.priority}
+												</Badge>
+											</Td>
+											<Td>
+												<Badge colorScheme={getStatusColour(task.status)}>{task.status}</Badge>
+											</Td>
+											<Td>{task.dueDate ? dayjs(task.dueDate).format(DATE_FORMAT) : '-'}</Td>
+										</Tr>
+									))}
+								</Tbody>
+							</Table>
+						</TableContainer>
+					) : (
+						<Text>
+							This project has no tasks.{' '}
+							<Link to="/tasks" style={{ textDecoration: 'underline' }}>
+								Visit the tasks page
+							</Link>{' '}
+							to create one, and assign it to this project.
+						</Text>
+					)}
 				</Stack>
 			</LayoutDashboard>
 		</main>

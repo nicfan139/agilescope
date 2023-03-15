@@ -23,9 +23,10 @@ import {
 	useDisclosure
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import { LayoutDashboard } from '@/components';
+import { Avatar, LayoutDashboard } from '@/components';
+import { DATE_FORMAT } from '@/constants';
 import { SprintForm } from '@/forms';
-import { getFullName, getPriorityColour, getStatusColour } from '@/helpers';
+import { getPriorityColour, getStatusColour } from '@/helpers';
 import { useSprintsList } from '@/hooks';
 import dayjs from 'dayjs';
 
@@ -89,8 +90,8 @@ const SprintsPage = (): React.ReactElement => {
 													</Text>
 
 													<Text fontSize="sm">
-														{dayjs(sprint.startDate).format('YYYY-MM-DD')} to{' '}
-														{dayjs(sprint.endDate).format('YYYY-MM-DD')}
+														{dayjs(sprint.startDate).format(DATE_FORMAT)} to{' '}
+														{dayjs(sprint.endDate).format(DATE_FORMAT)}
 													</Text>
 												</Stack>
 
@@ -104,21 +105,28 @@ const SprintsPage = (): React.ReactElement => {
 														<Thead>
 															<Tr>
 																<Th>Task</Th>
+																<Th>Project</Th>
 																<Th>Assigned to</Th>
 																<Th>Priority</Th>
 																<Th>Status</Th>
+																<Th>Due date</Th>
 															</Tr>
 														</Thead>
 														<Tbody>
 															{sprint.tasks.map((task) => (
-																<Tr>
+																<Tr _hover={{ backgroundColor: 'gray.100' }}>
 																	<Td>
 																		<Link to={`/tasks/${task._id}`}>
 																			<Text>{task.title}</Text>
 																		</Link>
 																	</Td>
 																	<Td>
-																		<Text>{getFullName(task.assignedTo)}</Text>
+																		<Link to={`/projects/${task.project._id}`}>
+																			<Text>{task.project.title}</Text>
+																		</Link>
+																	</Td>
+																	<Td>
+																		<Avatar user={task.assignedTo} size="sm" showName />
 																	</Td>
 																	<Td>
 																		<Badge colorScheme={getPriorityColour(task.priority)}>
@@ -129,6 +137,9 @@ const SprintsPage = (): React.ReactElement => {
 																		<Badge colorScheme={getStatusColour(task.status)}>
 																			{task.status}
 																		</Badge>
+																	</Td>
+																	<Td>
+																		{task.dueDate ? dayjs(task.dueDate).format(DATE_FORMAT) : '-'}
 																	</Td>
 																</Tr>
 															))}
