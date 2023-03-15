@@ -66,12 +66,14 @@ export const taskSchema = new Schema<TTask>(
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: 'Project',
-			required: true
+			required: false,
+			default: null
 		},
 		sprint: {
 			type: Schema.Types.ObjectId,
 			ref: 'Sprint',
-			required: true
+			required: false,
+			default: null
 		},
 		completedAt: {
 			type: String,

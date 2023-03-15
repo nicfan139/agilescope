@@ -174,14 +174,38 @@ const TaskController = {
 
 	deleteTask: async (req: Request, res: Response) => {
 		const { taskId } = req.params;
-		try {
-			await Task.findByIdAndDelete(taskId);
-			res.status(204).json(null);
-		} catch (e: unknown) {
-			const error = e as Error;
-			console.log(error);
-			res.status(500).json({
-				errorMessage: `Unable to delete task: ${error.message}`
+		const task = await Task.findById(taskId);
+
+		if (task) {
+			// Remove the task from the assigned project
+			const project = await Project.findById(task.project);
+			if (project) {
+				await Project.findByIdAndUpdate(project._id, {
+					tasks: project.tasks.filter((t) => t._id.toString() !== taskId)
+				});
+			}
+
+			// Remove the task from the assigned sprint
+			const sprint = await Sprint.findById(task.sprint);
+			if (sprint) {
+				await Sprint.findByIdAndUpdate(sprint._id, {
+					tasks: sprint.tasks.filter((t) => t._id.toString() !== taskId)
+				});
+			}
+
+			try {
+				await Task.findByIdAndDelete(taskId);
+				res.status(204).json(null);
+			} catch (e: unknown) {
+				const error = e as Error;
+				console.log(error);
+				res.status(500).json({
+					errorMessage: `Unable to delete task: ${error.message}`
+				});
+			}
+		} else {
+			res.status(400).json({
+				errorMessage: `Task #${taskId} does not exist`
 			});
 		}
 	}

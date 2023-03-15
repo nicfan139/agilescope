@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Project } from '../models';
+import { Project, Task } from '../models';
 import { USER_FIELDS } from '../utils';
 
 const ProjectController = {
@@ -66,14 +66,30 @@ const ProjectController = {
 
 	deleteProject: async (req: Request, res: Response) => {
 		const { projectId } = req.params;
-		try {
-			await Project.findByIdAndDelete(projectId);
-			res.status(204).json(null);
-		} catch (e: unknown) {
-			const error = e as Error;
-			console.log(error);
-			res.status(500).json({
-				errorMessage: `Unable to delete project: ${error.message}`
+		const project = await Project.findById(projectId);
+
+		if (project) {
+			try {
+				await Promise.all(
+					project.tasks.map(async (t) => {
+						await Task.findByIdAndUpdate(t._id, {
+							project: null
+						});
+					})
+				);
+
+				await Project.findByIdAndDelete(projectId);
+				res.status(204).json(null);
+			} catch (e: unknown) {
+				const error = e as Error;
+				console.log(error);
+				res.status(500).json({
+					errorMessage: `Unable to delete project: ${error.message}`
+				});
+			}
+		} else {
+			res.status(400).json({
+				errorMessage: `Project #${projectId} does not exist`
 			});
 		}
 	}
