@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import {
 	Box,
@@ -16,6 +15,7 @@ import {
 import DatePicker from 'react-datepicker';
 import { useSprintCreate, useSprintUpdate } from '@/hooks';
 import { FormHeader, FormFooter } from './shared';
+import { handleError } from '@/helpers';
 
 interface ISprintFormProps {
 	isOpen: boolean;
@@ -74,12 +74,7 @@ const SprintForm = ({ isOpen, onClose, sprint }: ISprintFormProps): React.ReactE
 					});
 				}
 			} catch (e: unknown) {
-				const error = e as AxiosError;
-				const data = error.response?.data as { errorMessage: string };
-				toast({
-					status: 'error',
-					title: data.errorMessage
-				});
+				handleError(e);
 			}
 		}
 	};

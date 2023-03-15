@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { AxiosError } from 'axios';
 import {
 	Box,
 	Drawer,
@@ -17,7 +16,7 @@ import {
 import { MultiSelect, TMultiSelectOption } from '@/components';
 import { COMPLEXITY_OPTIONS, PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import { useUserContext } from '@/contexts';
-import { getFullName } from '@/helpers';
+import { getFullName, handleError } from '@/helpers';
 import { useUsersList, useProjectCreate, useProjectUpdate } from '@/hooks';
 import { FormHeader, FormFooter } from './shared';
 
@@ -96,12 +95,7 @@ const ProjectForm = ({ isOpen, onClose, project }: IProjectFormProps): React.Rea
 					});
 				}
 			} catch (e: unknown) {
-				const error = e as AxiosError;
-				const data = error.response?.data as { errorMessage: string };
-				toast({
-					status: 'error',
-					title: data.errorMessage
-				});
+				handleError(e);
 			}
 		}
 	};

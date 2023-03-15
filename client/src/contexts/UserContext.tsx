@@ -8,10 +8,9 @@ import React, {
 } from 'react';
 import { navigate } from 'gatsby';
 import { useToast, Spinner } from '@chakra-ui/react';
-import { AxiosError } from 'axios';
 import { LayoutCenter } from '@/components';
 import { PUBLIC_ROUTES } from '@/constants';
-import { getAccessToken, handleLogout } from '@/helpers';
+import { getAccessToken, handleError, handleLogout } from '@/helpers';
 import { useAuthValidateToken } from '@/hooks';
 
 interface IUserContext {
@@ -51,12 +50,7 @@ export const UserContextProvider = ({ children }: { children: ReactNode }): Reac
 				});
 			}
 		} catch (e: unknown) {
-			const error = e as AxiosError;
-			const data = error.response?.data as { errorMessage: string };
-			toast({
-				status: 'error',
-				title: data.errorMessage
-			});
+			handleError(e);
 			setLogout();
 		}
 	};

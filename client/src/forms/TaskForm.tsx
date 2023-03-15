@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { AxiosError } from 'axios';
 import dayjs from 'dayjs';
 import {
 	Box,
@@ -18,7 +17,7 @@ import {
 import DatePicker from 'react-datepicker';
 import { DATE_FORMAT, COMPLEXITY_OPTIONS, PRIORITY_OPTIONS, STATUS_OPTIONS } from '@/constants';
 import { useUserContext } from '@/contexts';
-import { getFullName } from '@/helpers';
+import { getFullName, handleError } from '@/helpers';
 import {
 	useUsersList,
 	useProjectsList,
@@ -146,12 +145,7 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 				});
 			}
 		} catch (e: unknown) {
-			const error = e as AxiosError;
-			const data = error.response?.data as { errorMessage: string };
-			toast({
-				status: 'error',
-				title: data.errorMessage
-			});
+			handleError(e);
 		}
 	};
 
