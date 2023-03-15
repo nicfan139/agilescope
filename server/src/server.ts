@@ -31,7 +31,10 @@ connect(MONGODB_STRING).then(
 
 app.use(
 	morgan('dev'),
-	cors(),
+	cors({
+		origin: process.env.AGILESCOPE_CLIENT_URL as string,
+		credentials: true
+	}),
 	express.json(),
 	expressjwt({
 		algorithms: ['HS256'],
