@@ -13,9 +13,6 @@ const config: GatsbyConfig = {
 	},
 	trailingSlash: 'never',
 	graphqlTypegen: true,
-	flags: {
-		DEV_SSR: true
-	},
 	plugins: [
 		{
 			resolve: '@chakra-ui/gatsby-plugin',
