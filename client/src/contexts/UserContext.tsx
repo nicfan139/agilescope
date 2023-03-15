@@ -22,9 +22,6 @@ const UserContext = createContext<IUserContext>({
 	currentUser: null
 });
 
-const IS_PUBLIC_ROUTE =
-	typeof window !== 'undefined' ? PUBLIC_ROUTES.includes(window.location.pathname) : false;
-
 export const UserContextProvider = ({ children }: { children: ReactNode }): ReactElement => {
 	const [currentUser, setCurrentUser] = useState<TUser | null>(null);
 
@@ -68,13 +65,17 @@ export const UserContextProvider = ({ children }: { children: ReactNode }): Reac
 		if (getAccessToken()) {
 			validateAccessToken();
 		} else {
-			if (!IS_PUBLIC_ROUTE) {
+			if (typeof window !== 'undefined' && !PUBLIC_ROUTES.includes(window.location.pathname)) {
 				window.location.href = '/login';
 			}
 		}
 	}, []);
 
-	if (!IS_PUBLIC_ROUTE && (!getAccessToken() || authValidateToken.isLoading))
+	if (
+		typeof window !== 'undefined' &&
+		!PUBLIC_ROUTES.includes(window.location.pathname) &&
+		(!getAccessToken() || authValidateToken.isLoading)
+	)
 		return (
 			<LayoutCenter>
 				<Spinner boxSize={44} color="green" />
