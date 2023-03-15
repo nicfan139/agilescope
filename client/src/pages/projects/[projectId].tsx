@@ -18,9 +18,9 @@ import {
 	Text,
 	useDisclosure
 } from '@chakra-ui/react';
-import { EditIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+import { EditIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
-import { Avatar, LayoutDashboard } from '@/components';
+import { Avatar, BackButton, LayoutDashboard } from '@/components';
 import { DATE_FORMAT } from '@/constants';
 import { useUserContext } from '@/contexts';
 import { ProjectForm } from '@/forms';
@@ -46,11 +46,7 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 	return (
 		<main>
 			<LayoutDashboard>
-				<Link to="/projects">
-					<Button variant="ghost" leftIcon={<ChevronLeftIcon boxSize={6} />} px="0.25rem">
-						Back to projects
-					</Button>
-				</Link>
+				<BackButton />
 
 				<Box
 					display="flex"
