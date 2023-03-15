@@ -1,3 +1,3 @@
 export { default as Avatar } from './Avatar';
-export * from './Layout';
+export * from './Layouts';
 export * from './MultiSelect';
