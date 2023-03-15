@@ -6,6 +6,7 @@ import React, {
 	useEffect,
 	useContext
 } from 'react';
+import { navigate } from 'gatsby';
 import { useToast, Spinner } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 import { LayoutCenter } from '@/components';
@@ -40,6 +41,9 @@ export const UserContextProvider = ({ children }: { children: ReactNode }): Reac
 			const res = await authValidateToken.mutateAsync();
 			if (res.data.isTokenValid) {
 				setCurrentUser(res.data.user);
+				if (window.location.pathname === '/') {
+					navigate('/dashboard');
+				}
 			} else {
 				setLogout();
 				toast({

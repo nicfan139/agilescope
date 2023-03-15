@@ -1,27 +1,18 @@
 import React from 'react';
-import type { HeadFC, PageProps } from 'gatsby';
-import { Heading, Stack, Text } from '@chakra-ui/react';
-import dayjs from 'dayjs';
-import { LayoutDashboard } from '@/components';
-import { DATE_FORMAT } from '@/constants';
+import type { HeadFC } from 'gatsby';
+import { Spinner } from '@chakra-ui/react';
+import { LayoutCenter } from '@/components';
 
-export const Head: HeadFC = () => <title>Dashboard | AgileScope</title>;
+export const Head: HeadFC = () => <title>AgileScope</title>;
 
-const DashboardPage = ({}: PageProps): React.ReactElement => {
+const IndexPage = (): React.ReactElement => {
 	return (
 		<main>
-			<LayoutDashboard>
-				<Heading as="h1" size="2xl" mb="1.5rem">
-					Dashboard
-				</Heading>
-
-				<Stack direction="row" mb="1rem">
-					<Text>Today's date:</Text>
-					<Text fontWeight="semibold">{dayjs().format(DATE_FORMAT)}</Text>
-				</Stack>
-			</LayoutDashboard>
+			<LayoutCenter>
+				<Spinner size="xl" color="green" />
+			</LayoutCenter>
 		</main>
 	);
 };
 
-export default DashboardPage;
+export default IndexPage;

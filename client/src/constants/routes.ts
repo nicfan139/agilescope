@@ -1,10 +1,10 @@
 export const PUBLIC_ROUTES = ['/login'];
 
 export const NAV_LINKS = [
-	// {
-	// 	label: 'Dashboard',
-	// 	href: '/'
-	// },
+	{
+		label: 'Dashboard',
+		href: '/dashboard'
+	},
 	{
 		label: 'Projects',
 		href: '/projects'
