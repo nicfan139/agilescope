@@ -1,10 +1,17 @@
-export const getAccessToken = () => localStorage.getItem('agileScope-accessToken');
+export const getAccessToken = () => {
+	if (typeof window !== 'undefined') {
+		return window.localStorage.getItem('agileScope-accessToken');
+	}
+	return undefined;
+};
 
 export const getHeaders = () => ({
 	Authorization: `Bearer ${getAccessToken()}`
 });
 
 export const handleLogout = () => {
-	localStorage.removeItem('agileScope-accessToken');
-	window.location.href = '/login';
+	if (typeof window !== 'undefined') {
+		window.localStorage.removeItem('agileScope-accessToken');
+		window.location.href = '/login';
+	}
 };

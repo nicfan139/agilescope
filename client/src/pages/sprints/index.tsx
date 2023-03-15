@@ -40,7 +40,7 @@ const SprintsPage = (): React.ReactElement => {
 
 	const DEFAULT_OPEN_INDEX = useMemo(() => {
 		if (SPRINTS_LIST) {
-			if (window.location.search) {
+			if (typeof window !== 'undefined' && window.location.search) {
 				const SPRINT_ID = window.location.search.replace('?sprintId=', '');
 				return [SPRINTS_LIST.findIndex((s: TSprint) => s._id === SPRINT_ID)];
 			}

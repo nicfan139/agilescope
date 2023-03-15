@@ -35,9 +35,11 @@ const LoginPage = ({}: PageProps): React.ReactElement => {
 		try {
 			const res = await authLogin.mutateAsync(form);
 			if (res.status === 200) {
-				setTimeout(() => {
-					window.location.href = '/dashboard';
-				}, 4000);
+				if (typeof window !== 'undefined') {
+					setTimeout(() => {
+						window.location.href = '/dashboard';
+					}, 4000);
+				}
 				toast({
 					status: 'success',
 					title: res.data.message,

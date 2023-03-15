@@ -22,7 +22,8 @@ const UserContext = createContext<IUserContext>({
 	currentUser: null
 });
 
-const IS_PUBLIC_ROUTE = PUBLIC_ROUTES.includes(window.location.pathname);
+const IS_PUBLIC_ROUTE =
+	typeof window !== 'undefined' ? PUBLIC_ROUTES.includes(window.location.pathname) : false;
 
 export const UserContextProvider = ({ children }: { children: ReactNode }): ReactElement => {
 	const [currentUser, setCurrentUser] = useState<TUser | null>(null);
@@ -41,7 +42,7 @@ export const UserContextProvider = ({ children }: { children: ReactNode }): Reac
 			const res = await authValidateToken.mutateAsync();
 			if (res.data.isTokenValid) {
 				setCurrentUser(res.data.user);
-				if (window.location.pathname === '/') {
+				if (typeof window !== 'undefined' && window.location.pathname === '/') {
 					navigate('/dashboard');
 				}
 			} else {

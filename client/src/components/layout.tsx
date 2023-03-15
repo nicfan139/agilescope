@@ -47,6 +47,13 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 	const { currentUser } = useUserContext();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
+	const isCurrentPage = (href: string) => {
+		if (typeof window !== 'undefined') {
+			return window.location.pathname.includes(href);
+		}
+		return false;
+	};
+
 	return (
 		<Box position="relative" display="flex" h="100vh">
 			<Button
@@ -95,20 +102,17 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 					<Divider />
 
 					<DrawerBody display="flex" flexDirection="column" gap="1rem" mt="1rem" fontSize="1.5rem">
-						{NAV_LINKS.map(({ label, href }) => {
-							const IS_CURRENT_PAGE = window.location.pathname.includes(href);
-							return (
-								<Link to={href}>
-									<Text
-										p="0.5rem 1rem"
-										borderRadius="0.375rem"
-										{...(IS_CURRENT_PAGE && { backgroundColor: 'green.100' })}
-									>
-										{label}
-									</Text>
-								</Link>
-							);
-						})}
+						{NAV_LINKS.map(({ label, href }) => (
+							<Link to={href}>
+								<Text
+									p="0.5rem 1rem"
+									borderRadius="0.375rem"
+									{...(isCurrentPage(href) && { backgroundColor: 'green.100' })}
+								>
+									{label}
+								</Text>
+							</Link>
+						))}
 					</DrawerBody>
 
 					<Divider />
@@ -140,20 +144,20 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 				</Link>
 
 				<Box display="flex" flexDirection="column" gap="0.5rem" fontSize="1.5rem">
-					{NAV_LINKS.map(({ label, href }) => {
-						const IS_CURRENT_PAGE = window.location.pathname.includes(href);
-						return (
-							<Link to={href}>
-								<Text
-									p="0.5rem"
-									borderRadius="0.375rem"
-									{...(IS_CURRENT_PAGE && { backgroundColor: 'green.100', fontWeight: 'semibold' })}
-								>
-									{label}
-								</Text>
-							</Link>
-						);
-					})}
+					{NAV_LINKS.map(({ label, href }) => (
+						<Link to={href}>
+							<Text
+								p="0.5rem"
+								borderRadius="0.375rem"
+								{...(isCurrentPage(href) && {
+									backgroundColor: 'green.100',
+									fontWeight: 'semibold'
+								})}
+							>
+								{label}
+							</Text>
+						</Link>
+					))}
 				</Box>
 
 				<Box display="flex" flexDirection="column" gap="1rem">
