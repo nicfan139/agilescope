@@ -74,7 +74,7 @@ const UserController = {
 					payload: hashedEmailVerifyToken
 				});
 
-				res.json(201).json({
+				res.status(201).json({
 					user
 				});
 			} else {

@@ -94,13 +94,17 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 							Project
 						</Heading>
 
-						{TASK_DETAILS.project ? (
-							<Link to={`/projects/${TASK_DETAILS.project._id}`}>{TASK_DETAILS.project.title}</Link>
-						) : (
-							<Text color="gray.500" fontStyle="italic">
-								None assigned
-							</Text>
-						)}
+						<Link to={`/projects/${TASK_DETAILS.project._id}`}>{TASK_DETAILS.project.title}</Link>
+					</Stack>
+
+					<Stack justifyContent="space-between" alignItems="flex-start">
+						<Heading as="h3" fontSize="xl">
+							Sprint
+						</Heading>
+
+						<Link to={`/sprints?sprintId=${TASK_DETAILS.sprint._id}`}>
+							{TASK_DETAILS.sprint.name}
+						</Link>
 					</Stack>
 
 					<Stack justifyContent="space-between" alignItems="flex-start">

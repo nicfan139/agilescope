@@ -12,9 +12,9 @@ export type TTask = {
 	status: 'ready' | 'in-progress' | 'review' | 'completed';
 	createdBy: TUser;
 	assignedTo: TUser;
-	project?: TProject;
-	sprint?: TSprint;
-	completedAt: string;
+	project: TProject;
+	sprint: TSprint;
+	completedAt?: string;
 	subtasks: Array<TUser>;
 	dueDate?: string;
 };
@@ -61,17 +61,17 @@ export const taskSchema = new Schema<TTask>(
 		assignedTo: {
 			type: Schema.Types.ObjectId,
 			ref: 'User',
-			required: false
+			required: true
 		},
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: 'Project',
-			required: false
+			required: true
 		},
 		sprint: {
 			type: Schema.Types.ObjectId,
 			ref: 'Sprint',
-			required: false
+			required: true
 		},
 		completedAt: {
 			type: String,

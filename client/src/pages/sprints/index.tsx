@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { HeadFC, Link } from 'gatsby';
 import {
 	Accordion,
@@ -12,13 +12,20 @@ import {
 	Heading,
 	Spinner,
 	Stack,
+	Table,
+	TableContainer,
+	Thead,
+	Th,
+	Td,
+	Tr,
+	Tbody,
 	Text,
 	useDisclosure
 } from '@chakra-ui/react';
-import { AddIcon, CheckIcon } from '@chakra-ui/icons';
+import { AddIcon } from '@chakra-ui/icons';
 import { LayoutDashboard } from '@/components';
 import { SprintForm } from '@/forms';
-import { getFullName, getStatusColour } from '@/helpers';
+import { getFullName, getPriorityColour, getStatusColour } from '@/helpers';
 import { useSprintsList } from '@/hooks';
 import dayjs from 'dayjs';
 
@@ -29,6 +36,25 @@ const SprintsPage = (): React.ReactElement => {
 	const { onOpen, isOpen, onClose } = useDisclosure();
 
 	const SPRINTS_LIST = data?.sprints;
+
+	const DEFAULT_OPEN_INDEX = useMemo(() => {
+		if (SPRINTS_LIST) {
+			if (window.location.search) {
+				const SPRINT_ID = window.location.search.replace('?sprintId=', '');
+				return [SPRINTS_LIST.findIndex((s: TSprint) => s._id === SPRINT_ID)];
+			}
+
+			const CURRENT_SPRINT = SPRINTS_LIST.findIndex((s: TSprint) => {
+				const currentDate = dayjs();
+				return currentDate.isAfter(s.startDate) && currentDate.isBefore(s.endDate);
+			});
+			if (CURRENT_SPRINT !== -1) {
+				return [CURRENT_SPRINT];
+			}
+			return [];
+		}
+		return [];
+	}, [SPRINTS_LIST]);
 
 	return (
 		<main>
@@ -51,13 +77,8 @@ const SprintsPage = (): React.ReactElement => {
 					<Spinner size="xl" color="green" />
 				) : (
 					<Box>
-						<Stack direction="row" mb="1rem">
-							<Text>Today's date:</Text>
-							<Text fontWeight="semibold">{dayjs().format('YYYY-MM-DD')}</Text>
-						</Stack>
-
 						{SPRINTS_LIST.length > 0 ? (
-							<Accordion>
+							<Accordion defaultIndex={DEFAULT_OPEN_INDEX}>
 								{SPRINTS_LIST.map((sprint: TSprint, index: number) => (
 									<AccordionItem key={`sprint-card-${index}`}>
 										<h3>
@@ -76,46 +97,49 @@ const SprintsPage = (): React.ReactElement => {
 												<AccordionIcon />
 											</AccordionButton>
 										</h3>
-										<AccordionPanel pb={4}>
-											<Stack>
-												<Text fontWeight="semibold">Tasks:</Text>
-
-												<Box>
-													{sprint.tasks.length > 0 ? (
-														sprint.tasks.map((task) => (
-															<Link key={`sprint-task-${task._id}`} to={`/tasks/${task._id}`}>
-																<Stack
-																	direction="row"
-																	justifyContent="space-between"
-																	p="0.25rem"
-																	_hover={{ bgColor: 'whitesmoke' }}
-																>
-																	<Stack direction="row" alignItems="center">
-																		<CheckIcon
-																			color="green"
-																			visibility={
-																				task.status === 'completed' ? 'visible' : 'hidden'
-																			}
-																		/>
-																		<Text>{task.title}</Text>
-																	</Stack>
-
-																	<Stack direction="row" alignItems="center">
+										<AccordionPanel>
+											{sprint.tasks.length > 0 ? (
+												<TableContainer>
+													<Table variant="simple">
+														<Thead>
+															<Tr>
+																<Th>Task</Th>
+																<Th>Assigned to</Th>
+																<Th>Priority</Th>
+																<Th>Status</Th>
+															</Tr>
+														</Thead>
+														<Tbody>
+															{sprint.tasks.map((task) => (
+																<Tr>
+																	<Td>
+																		<Link to={`/tasks/${task._id}`}>
+																			<Text>{task.title}</Text>
+																		</Link>
+																	</Td>
+																	<Td>
 																		<Text>{getFullName(task.assignedTo)}</Text>
+																	</Td>
+																	<Td>
+																		<Badge colorScheme={getPriorityColour(task.priority)}>
+																			{task.priority}
+																		</Badge>
+																	</Td>
+																	<Td>
 																		<Badge colorScheme={getStatusColour(task.status)}>
 																			{task.status}
 																		</Badge>
-																	</Stack>
-																</Stack>
-															</Link>
-														))
-													) : (
-														<Text fontSize="sm" fontStyle="italic">
-															No tasks assigned for this sprint
-														</Text>
-													)}
-												</Box>
-											</Stack>
+																	</Td>
+																</Tr>
+															))}
+														</Tbody>
+													</Table>
+												</TableContainer>
+											) : (
+												<Text fontSize="sm" fontStyle="italic">
+													No tasks assigned for this sprint
+												</Text>
+											)}
 										</AccordionPanel>
 									</AccordionItem>
 								))}

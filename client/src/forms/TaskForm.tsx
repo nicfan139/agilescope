@@ -41,8 +41,8 @@ interface ITaskFormState {
 	priority: TPriorityValue;
 	status: TStatusValue;
 	assignedTo: string;
-	project?: string;
-	sprint?: string;
+	project: string;
+	sprint: string;
 	dueDate?: Date | null;
 	completedAt?: Date | null;
 }
@@ -116,12 +116,8 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 				priority: form.priority,
 				status: form.status,
 				assignedTo: form.assignedTo,
-				...(form.project && {
-					project: form.project
-				}),
-				...(form.sprint && {
-					sprint: form.sprint
-				}),
+				project: form.project,
+				sprint: form.sprint,
 				...(form.dueDate && {
 					dueDate: form.dueDate.toISOString()
 				}),
@@ -239,9 +235,9 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 								</Select>
 							</FormControl>
 
-							<FormControl>
+							<FormControl isRequired>
 								<FormLabel>Project</FormLabel>
-								<Select placeholder="Select project" {...register('project')}>
+								<Select placeholder="Select project" {...register('project', { required: true })}>
 									{PROJECTS_LIST.map(({ label, value }: ISelectOption) => (
 										<option key={`task-project-option-${value}`} value={value}>
 											{label}
@@ -250,9 +246,9 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 								</Select>
 							</FormControl>
 
-							<FormControl>
+							<FormControl isRequired>
 								<FormLabel>Sprint</FormLabel>
-								<Select placeholder="Select sprint" {...register('sprint')}>
+								<Select placeholder="Select sprint" {...register('sprint', { required: true })}>
 									{SPRINTS_LIST.map(({ label, value }: ISelectOption) => (
 										<option key={`task-sprint-option-${value}`} value={value}>
 											{label}

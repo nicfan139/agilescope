@@ -7,16 +7,11 @@ type TProjectPayload = Pick<
 
 type TTaskPayload = Pick<
 	TTask,
-	| 'title'
-	| 'description'
-	| 'complexity'
-	| 'priority'
-	| 'status'
-	| 'project'
-	| 'dueDate'
-	| 'completedAt'
+	'title' | 'description' | 'complexity' | 'priority' | 'status' | 'dueDate' | 'completedAt'
 > & {
 	assignedTo: string;
+	project: string;
+	sprint: string;
 };
 
 type TSprintPayload = Pick<TSprint, 'name' | 'startDate' | 'endDate'>;

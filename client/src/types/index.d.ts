@@ -32,8 +32,8 @@ type TTask = {
 	status: TStatusValue;
 	createdBy: TUser;
 	assignedTo: TUser;
-	project?: TProject;
-	sprint?: TSprint;
+	project: TProject;
+	sprint: TSprint;
 	subtasks: Array<TUser>;
 	dueDate?: string;
 	completedAt?: string;
