@@ -102,8 +102,8 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 					<Divider />
 
 					<DrawerBody display="flex" flexDirection="column" gap="1rem" mt="1rem" fontSize="1.5rem">
-						{NAV_LINKS.map(({ label, href }) => (
-							<Link to={href}>
+						{NAV_LINKS.map(({ label, href }, index) => (
+							<Link key={`nav-link-web-${index}`} to={href}>
 								<Text
 									p="0.5rem 1rem"
 									borderRadius="0.375rem"
@@ -144,8 +144,8 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 				</Link>
 
 				<Box display="flex" flexDirection="column" gap="0.5rem" fontSize="1.5rem">
-					{NAV_LINKS.map(({ label, href }) => (
-						<Link to={href}>
+					{NAV_LINKS.map(({ label, href }, index) => (
+						<Link key={`nav-link-web-${index}`} to={href}>
 							<Text
 								p="0.5rem"
 								borderRadius="0.375rem"
