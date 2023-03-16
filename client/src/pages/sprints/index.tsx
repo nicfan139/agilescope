@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { HeadFC, Link } from 'gatsby';
+import type { HeadFC } from 'gatsby';
 import {
 	Accordion,
 	AccordionItem,
@@ -23,7 +23,7 @@ import {
 	useDisclosure
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import { Avatar, LayoutDashboard } from '@/components';
+import { Avatar, HoveredLink, LayoutDashboard } from '@/components';
 import { DATE_FORMAT } from '@/constants';
 import { SprintForm } from '@/forms';
 import { getPriorityColour, getStatusColour } from '@/helpers';
@@ -114,16 +114,19 @@ const SprintsPage = (): React.ReactElement => {
 														</Thead>
 														<Tbody>
 															{sprint.tasks.map((task) => (
-																<Tr _hover={{ backgroundColor: 'gray.100' }}>
+																<Tr
+																	key={`sprint-task-${task._id}`}
+																	fontSize="sm"
+																	_hover={{ backgroundColor: 'gray.100' }}
+																>
 																	<Td>
-																		<Link to={`/tasks/${task._id}`}>
-																			<Text>{task.title}</Text>
-																		</Link>
+																		<HoveredLink to={`/tasks/${task._id}`} label={task.title} />
 																	</Td>
 																	<Td>
-																		<Link to={`/projects/${task.project._id}`}>
-																			<Text>{task.project.title}</Text>
-																		</Link>
+																		<HoveredLink
+																			to={`/projects/${task.project._id}`}
+																			label={task.project.title}
+																		/>
 																	</Td>
 																	<Td>
 																		<Avatar user={task.assignedTo} size="sm" showName />

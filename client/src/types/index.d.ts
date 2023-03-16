@@ -51,6 +51,15 @@ type TSprint = {
 	updatedAt: string;
 };
 
+type TTeam = {
+	_id: string;
+	name: string;
+	description: string;
+	members: Array<TUser>;
+	createdAt: string;
+	updatedAt: string;
+};
+
 type TComplexityValue = 'easy' | 'medium' | 'hard';
 type TPriorityValue = 'low' | 'medium' | 'high' | 'urgent';
 type TStatusValue = 'ready' | 'in-progress' | 'review' | 'completed';

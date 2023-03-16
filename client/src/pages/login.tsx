@@ -94,7 +94,7 @@ const LoginPage = ({}: PageProps): React.ReactElement => {
 
 	return (
 		<LayoutCenter backgroundColor="whitesmoke">
-			<Box p="1.5rem" w="full" maxW="lg" backgroundColor="white">
+			<Box p="1.5rem" w="full" maxW="lg" backgroundColor="white" boxShadow="lg">
 				<Heading as="h1" size="xl" mb="1.5rem">
 					Login to AgileScope
 				</Heading>

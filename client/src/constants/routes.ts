@@ -16,9 +16,9 @@ export const NAV_LINKS = [
 	{
 		label: 'Tasks',
 		href: '/tasks'
+	},
+	{
+		label: 'Teams',
+		href: '/teams'
 	}
-	// {
-	// 	label: 'Teams',
-	// 	href: '/teams'
-	// }
 ];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeadFC, Link } from 'gatsby';
+import type { HeadFC } from 'gatsby';
 import {
 	Badge,
 	Box,
@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
-import { Avatar, LayoutDashboard } from '@/components';
+import { Avatar, HoveredLink, LayoutDashboard } from '@/components';
 import { DATE_FORMAT } from '@/constants';
 import { TaskForm } from '@/forms';
 import { useTasksList } from '@/hooks/tasks';
@@ -68,19 +68,20 @@ const TasksPage = (): React.ReactElement => {
 									</Thead>
 									<Tbody>
 										{TASKS_LIST.map((task: TTask) => (
-											<Tr key={`task-row-${task._id}`} _hover={{ backgroundColor: 'gray.100' }}>
+											<Tr
+												key={`task-row-${task._id}`}
+												fontSize="sm"
+												_hover={{ backgroundColor: 'gray.100' }}
+											>
 												<Td>
-													<Link to={`/tasks/${task._id}`}>
-														<Text _hover={{ textDecoration: 'underline' }}>{task.title}</Text>
-													</Link>
+													<HoveredLink to={`/tasks/${task._id}`} label={task.title} />
 												</Td>
 
 												<Td>
-													<Link to={`/projects/${task.project._id}`}>
-														<Text _hover={{ textDecoration: 'underline' }}>
-															{task.project.title}
-														</Text>
-													</Link>
+													<HoveredLink
+														to={`/projects/${task.project._id}`}
+														label={task.project.title}
+													/>
 												</Td>
 
 												<Td>

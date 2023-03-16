@@ -3,6 +3,7 @@ type TProjectPayload = Pick<
 	'title' | 'description' | 'complexity' | 'priority' | 'status'
 > & {
 	createdBy: string;
+	members: Array<string>;
 };
 
 type TTaskPayload = Pick<
@@ -15,3 +16,7 @@ type TTaskPayload = Pick<
 };
 
 type TSprintPayload = Pick<TSprint, 'name' | 'startDate' | 'endDate'>;
+
+type TTeamPayload = Omit<TTeam, '_id'> & {
+	members: Array<string>;
+};

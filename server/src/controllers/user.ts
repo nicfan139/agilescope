@@ -109,7 +109,6 @@ const UserController = {
 
 	getUserDashboard: async (req: Request, res: Response) => {
 		const { userId } = req.params;
-		console.log(userId);
 
 		// Collect project.members with userId
 		const projects = await Project.find({

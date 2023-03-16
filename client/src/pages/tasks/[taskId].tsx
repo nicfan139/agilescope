@@ -47,9 +47,14 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 					gap="1rem"
 					justifyContent="space-between"
 					alignItems={{ base: 'flex-start', md: 'center' }}
-					my="1.5rem"
+					mt="0.5rem"
+					mb="1.5rem"
 				>
 					<Box>
+						<Text fontSize="2xl" fontWeight="semibold">
+							Task:
+						</Text>
+
 						<Heading as="h1" size="2xl" mb="0.25rem">
 							{TASK_DETAILS.title}
 						</Heading>

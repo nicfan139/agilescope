@@ -17,7 +17,7 @@ const TeamController = {
 
 	getTeam: async (req: Request, res: Response) => {
 		const { teamId } = req.params;
-		const team = await Team.findById(teamId, null, { lean: true });
+		const team = await Team.findById(teamId, null, { lean: true, populate: 'members' });
 		if (team) {
 			res.status(200).json({
 				team

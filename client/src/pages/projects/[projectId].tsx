@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
-import { Avatar, BackButton, LayoutDashboard } from '@/components';
+import { Avatar, BackButton, HoveredLink, LayoutDashboard } from '@/components';
 import { DATE_FORMAT } from '@/constants';
 import { useUserContext } from '@/contexts';
 import { ProjectForm } from '@/forms';
@@ -54,9 +54,14 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 					gap="1rem"
 					justifyContent="space-between"
 					alignItems={{ base: 'flex-start', md: 'center' }}
-					my="1.5rem"
+					mt="0.5rem"
+					mb="1.5rem"
 				>
 					<Box>
+						<Text fontSize="2xl" fontWeight="semibold">
+							Project:
+						</Text>
+
 						<Heading as="h1" size="2xl" mb="0.25rem">
 							{PROJECT_DETAILS.title}
 						</Heading>
@@ -127,9 +132,9 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 					<Heading as="h3" fontSize="xl">
 						Members ({PROJECT_DETAILS.members.length})
 					</Heading>
-					<Stack direction="row" flexWrap="wrap">
+					<Stack direction="row" flexWrap="wrap" spacing="2rem">
 						{PROJECT_DETAILS.members.map((m, index) => (
-							<Avatar key={`project-member-${index}`} user={m} />
+							<Avatar key={`project-member-${index}`} user={m} showName />
 						))}
 					</Stack>
 				</Stack>
@@ -156,17 +161,22 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 								</Thead>
 								<Tbody>
 									{PROJECT_DETAILS.tasks.map((task) => (
-										<Tr _hover={{ backgroundColor: 'gray.100' }}>
+										<Tr
+											key={`project-task-${task._id}`}
+											fontSize="sm"
+											_hover={{ backgroundColor: 'gray.100' }}
+										>
 											<Td>
-												<Link to={`/tasks/${task._id}`}>
-													<Text>{task.title}</Text>
-												</Link>
+												<HoveredLink to={`/tasks/${task._id}`} label={task.title} />
 											</Td>
 											<Td>
 												<Avatar user={task.assignedTo} size="sm" showName />
 											</Td>
 											<Td>
-												<Link to={`/sprints?sprintId=${task.sprint._id}`}>{task.sprint.name}</Link>
+												<HoveredLink
+													to={`/sprints?sprintId=${task.sprint._id}`}
+													label={task.sprint.name}
+												/>
 											</Td>
 											<Td>
 												<Badge colorScheme={getPriorityColour(task.priority)}>

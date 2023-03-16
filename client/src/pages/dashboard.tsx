@@ -44,7 +44,7 @@ const DashboardPage = (): React.ReactElement => {
 
 				<Text mb="1.5rem" fontStyle="italic">
 					Welcome to AgileScope {currentUser.firstName}! Go ahead and start managing your projects,
-					sprints, and tasks.
+					sprints, tasks, and teams.
 				</Text>
 
 				<Stack direction="row" mb="2rem">
