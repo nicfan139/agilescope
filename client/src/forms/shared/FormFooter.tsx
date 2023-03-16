@@ -15,7 +15,14 @@ const FormFooter = ({ onClose, isSubmitting }: IFormFooterProps): React.ReactEle
 				Cancel
 			</Button>
 
-			<Button type="submit" size="lg" variant="solid" colorScheme="green" isLoading={isSubmitting}>
+			<Button
+				type="submit"
+				size="lg"
+				variant="solid"
+				colorScheme="green"
+				isLoading={isSubmitting}
+				isDisabled={isSubmitting}
+			>
 				Submit
 			</Button>
 		</DrawerFooter>

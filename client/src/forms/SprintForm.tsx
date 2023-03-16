@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import {
@@ -32,14 +32,24 @@ interface ISprintFormState {
 const SprintForm = ({ isOpen, onClose, sprint }: ISprintFormProps): React.ReactElement => {
 	const { handleSubmit, register, reset, setValue, watch } = useForm<ISprintFormState>({
 		defaultValues: {
-			name: sprint?.name,
-			startDate: sprint?.startDate ? new Date(sprint.startDate) : null,
-			endDate: sprint?.endDate ? new Date(sprint.endDate) : null
+			name: '',
+			startDate: null,
+			endDate: null
 		}
 	});
 	const sprintCreate = useSprintCreate();
 	const sprintUpdate = useSprintUpdate(sprint?._id as string);
 	const toast = useToast();
+
+	useEffect(() => {
+		if (sprint) {
+			setValue('name', sprint.name);
+			setValue('startDate', new Date(sprint.startDate));
+			setValue('endDate', new Date(sprint.endDate));
+		} else {
+			reset();
+		}
+	}, [sprint]);
 
 	const onSubmit = async (form: ISprintFormState) => {
 		if (dayjs(form.startDate).isAfter(form.endDate)) {

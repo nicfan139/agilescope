@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import type { HeadFC } from 'gatsby';
 import {
 	Accordion,
@@ -10,6 +10,7 @@ import {
 	Box,
 	Button,
 	Heading,
+	IconButton,
 	Spinner,
 	Stack,
 	Table,
@@ -22,7 +23,7 @@ import {
 	Text,
 	useDisclosure
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
+import { AddIcon, EditIcon } from '@chakra-ui/icons';
 import { Avatar, HoveredLink, LayoutDashboard } from '@/components';
 import { DATE_FORMAT } from '@/constants';
 import { SprintForm } from '@/forms';
@@ -35,6 +36,8 @@ export const Head: HeadFC = () => <title>Sprints | AgileScope</title>;
 const SprintsPage = (): React.ReactElement => {
 	const { isLoading, data } = useSprintsList();
 	const { onOpen, isOpen, onClose } = useDisclosure();
+
+	const [selectedSprint, setSelectedSprint] = useState<TSprint>();
 
 	const SPRINTS_LIST = data?.sprints;
 
@@ -72,7 +75,16 @@ const SprintsPage = (): React.ReactElement => {
 					)}
 				</Box>
 
-				<SprintForm {...{ isOpen, onClose }} />
+				<SprintForm
+					{...{
+						isOpen,
+						onClose: () => {
+							setSelectedSprint(undefined);
+							onClose();
+						},
+						sprint: selectedSprint
+					}}
+				/>
 
 				{isLoading || !data ? (
 					<Spinner size="xl" color="green" />
@@ -95,7 +107,18 @@ const SprintsPage = (): React.ReactElement => {
 													</Text>
 												</Stack>
 
-												<AccordionIcon />
+												<Stack direction="row" alignItems="center">
+													<IconButton
+														aria-label="edit"
+														variant="outline"
+														icon={<EditIcon />}
+														onClick={() => {
+															setSelectedSprint(sprint);
+															onOpen();
+														}}
+													/>
+													<AccordionIcon />
+												</Stack>
 											</AccordionButton>
 										</h3>
 										<AccordionPanel>

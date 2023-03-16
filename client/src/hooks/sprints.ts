@@ -39,7 +39,7 @@ export const useSprintUpdate = (sprintId: string) => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries([`GET_SPRINT_${sprintId}`]);
+				queryClient.invalidateQueries([`GET_SPRINTS`]);
 			}
 		}
 	);
