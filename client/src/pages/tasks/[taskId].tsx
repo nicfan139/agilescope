@@ -1,5 +1,5 @@
 import React from 'react';
-import { HeadFC, PageProps, Link } from 'gatsby';
+import { HeadFC, PageProps } from 'gatsby';
 import {
 	Badge,
 	Box,
@@ -9,16 +9,18 @@ import {
 	Spinner,
 	Stack,
 	Text,
+	Tooltip,
 	useDisclosure
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
 import dayjs from 'dayjs';
-import { Avatar, BackButton, LayoutDashboard } from '@/components';
+import { Avatar, BackButton, HoveredLink, LayoutDashboard } from '@/components';
 import { DATE_FORMAT } from '@/constants';
 import { useUserContext } from '@/contexts';
 import { TaskForm } from '@/forms';
 import { useTaskDetails } from '@/hooks';
 import { getComplexityColour, getFullName, getPriorityColour, getStatusColour } from '@/helpers';
+import { DeleteTaskDialog } from '@/modals';
 
 export const Head: HeadFC = () => <title>Task | AgileScope</title>;
 
@@ -61,8 +63,11 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 
 						<Box fontSize="xs" fontStyle="italic">
 							<Text>
-								Created by {getFullName(TASK_OWNER)} on{' '}
-								{dayjs(TASK_DETAILS.createdAt).format(DATE_FORMAT)}
+								Created by{' '}
+								<strong>
+									{currentUser?._id === TASK_OWNER._id ? 'you' : getFullName(TASK_OWNER)}{' '}
+								</strong>
+								on {dayjs(TASK_DETAILS.createdAt).format(DATE_FORMAT)}
 							</Text>
 							<Text>
 								Last updated on {dayjs(TASK_DETAILS.updatedAt).format('YYYY-MM-DD hh:mm a')}
@@ -70,16 +75,26 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 						</Box>
 					</Box>
 
-					{CURRENT_USER_OWNS_TASK && (
-						<Button
-							colorScheme="green"
-							leftIcon={<EditIcon />}
-							onClick={onOpen}
-							ml={{ base: 0, md: '2rem' }}
-						>
-							Update
-						</Button>
-					)}
+					<Tooltip
+						label={`Only the original task creator (${getFullName(
+							TASK_OWNER
+						)}) can make modifications`}
+						hasArrow
+						isDisabled={CURRENT_USER_OWNS_TASK}
+					>
+						<Stack direction="row" ml={{ base: 0, md: '2rem' }}>
+							<Button
+								colorScheme="green"
+								leftIcon={<EditIcon />}
+								onClick={onOpen}
+								isDisabled={!CURRENT_USER_OWNS_TASK}
+							>
+								Update
+							</Button>
+
+							<DeleteTaskDialog taskId={taskId} isDisabled={!CURRENT_USER_OWNS_TASK} />
+						</Stack>
+					</Tooltip>
 				</Box>
 
 				<TaskForm {...{ isOpen, onClose, task: TASK_DETAILS }} />
@@ -104,7 +119,9 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 							Project
 						</Heading>
 
-						<Link to={`/projects/${TASK_DETAILS.project._id}`}>{TASK_DETAILS.project.title}</Link>
+						<HoveredLink to={`/projects/${TASK_DETAILS.project._id}`}>
+							{TASK_DETAILS.project.title}
+						</HoveredLink>
 					</Stack>
 
 					<Stack justifyContent="space-between" alignItems="flex-start">
@@ -112,9 +129,9 @@ const TaskPage = ({ params }: PageProps): React.ReactElement => {
 							Sprint
 						</Heading>
 
-						<Link to={`/sprints?sprintId=${TASK_DETAILS.sprint._id}`}>
+						<HoveredLink to={`/sprints?sprintId=${TASK_DETAILS.sprint._id}`}>
 							{TASK_DETAILS.sprint.name}
-						</Link>
+						</HoveredLink>
 					</Stack>
 				</Box>
 

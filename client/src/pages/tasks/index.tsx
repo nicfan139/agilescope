@@ -74,14 +74,13 @@ const TasksPage = (): React.ReactElement => {
 												_hover={{ backgroundColor: 'gray.100' }}
 											>
 												<Td>
-													<HoveredLink to={`/tasks/${task._id}`} label={task.title} />
+													<HoveredLink to={`/tasks/${task._id}`}>{task.title}</HoveredLink>
 												</Td>
 
 												<Td>
-													<HoveredLink
-														to={`/projects/${task.project._id}`}
-														label={task.project.title}
-													/>
+													<HoveredLink to={`/projects/${task.project._id}`}>
+														{task.project.title}
+													</HoveredLink>
 												</Td>
 
 												<Td>

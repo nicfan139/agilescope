@@ -16,6 +16,7 @@ import {
 	Tr,
 	Tbody,
 	Text,
+	Tooltip,
 	useDisclosure
 } from '@chakra-ui/react';
 import { EditIcon } from '@chakra-ui/icons';
@@ -77,16 +78,23 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 						</Box>
 					</Box>
 
-					{CURRENT_USER_OWNS_PROJECT && (
+					<Tooltip
+						label={`Only the original project creator (${getFullName(
+							PROJECT_OWNER
+						)}) can make modifications`}
+						hasArrow
+						isDisabled={CURRENT_USER_OWNS_PROJECT}
+					>
 						<Button
 							colorScheme="green"
 							leftIcon={<EditIcon />}
 							onClick={onOpen}
 							ml={{ base: 0, md: '2rem' }}
+							isDisabled={!CURRENT_USER_OWNS_PROJECT}
 						>
 							Update
 						</Button>
-					)}
+					</Tooltip>
 				</Box>
 
 				<ProjectForm {...{ isOpen, onClose, project: PROJECT_DETAILS }} />
@@ -167,16 +175,15 @@ const ProjectPage = ({ params }: PageProps): React.ReactElement => {
 											_hover={{ backgroundColor: 'gray.100' }}
 										>
 											<Td>
-												<HoveredLink to={`/tasks/${task._id}`} label={task.title} />
+												<HoveredLink to={`/tasks/${task._id}`}>{task.title}</HoveredLink>
 											</Td>
 											<Td>
 												<Avatar user={task.assignedTo} size="sm" showName />
 											</Td>
 											<Td>
-												<HoveredLink
-													to={`/sprints?sprintId=${task.sprint._id}`}
-													label={task.sprint.name}
-												/>
+												<HoveredLink to={`/sprints?sprintId=${task.sprint._id}`}>
+													{task.sprint.name}
+												</HoveredLink>
 											</Td>
 											<Td>
 												<Badge colorScheme={getPriorityColour(task.priority)}>

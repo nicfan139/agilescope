@@ -4,12 +4,12 @@ import { Text } from '@chakra-ui/react';
 
 interface IHoveredLink {
 	to: string;
-	label: string;
+	children: React.ReactNode;
 }
 
-const HoveredLink = ({ to, label }: IHoveredLink): React.ReactElement => (
+const HoveredLink = ({ to, children }: IHoveredLink): React.ReactElement => (
 	<Link to={to}>
-		<Text _hover={{ textDecoration: 'underline' }}>{label}</Text>
+		<Text _hover={{ textDecoration: 'underline' }}>{children}</Text>
 	</Link>
 );
 

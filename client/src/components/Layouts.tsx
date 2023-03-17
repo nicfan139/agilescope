@@ -192,7 +192,13 @@ export const LayoutDashboard = ({ children }: ILayoutProps): React.ReactElement 
 				</Box>
 			</Box>
 
-			<Box h="100%" w="100%" overflowY="auto" p="2rem">
+			<Box
+				h="100%"
+				w={{ base: '100%', lg: 'container.xl' }}
+				overflowY="auto"
+				mx={{ base: 0, lg: 'auto' }}
+				p="2rem"
+			>
 				{children}
 			</Box>
 		</Box>

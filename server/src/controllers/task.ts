@@ -45,7 +45,7 @@ const TaskController = {
 				const project = await Project.findById(req.body.project);
 				if (project && !project.tasks.some((t) => t._id.toString() === task._id.toString())) {
 					await Project.findByIdAndUpdate(project._id, {
-						project: [...project.tasks, task._id]
+						tasks: [...project.tasks, task._id]
 					});
 				}
 			}

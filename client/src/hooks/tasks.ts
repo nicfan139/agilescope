@@ -52,3 +52,18 @@ export const useTaskUpdate = (taskId: string) => {
 		}
 	);
 };
+
+export const useTaskDelete = () => {
+	const queryClient = useQueryClient();
+	return useMutation(
+		async (taskId: string) =>
+			await axios.delete(`${BACKEND_API_URL}/api/tasks/${taskId}`, {
+				headers: getHeaders()
+			}),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries([`GET_TASKS`]);
+			}
+		}
+	);
+};
