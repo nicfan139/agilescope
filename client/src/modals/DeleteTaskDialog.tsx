@@ -40,7 +40,7 @@ const DeleteTaskDialog = ({ taskId, isDisabled }: IDeleteTaskDialogProps): React
 				});
 			}
 		} catch (e: unknown) {
-			handleError(e);
+			handleError(e, toast);
 		}
 	};
 

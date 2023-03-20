@@ -84,7 +84,7 @@ const SprintForm = ({ isOpen, onClose, sprint }: ISprintFormProps): React.ReactE
 					});
 				}
 			} catch (e: unknown) {
-				handleError(e);
+				handleError(e, toast);
 			}
 		}
 	};

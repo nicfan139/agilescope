@@ -95,7 +95,7 @@ const ProjectForm = ({ isOpen, onClose, project }: IProjectFormProps): React.Rea
 					});
 				}
 			} catch (e: unknown) {
-				handleError(e);
+				handleError(e, toast);
 			}
 		}
 	};

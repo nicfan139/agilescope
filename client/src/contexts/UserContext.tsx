@@ -50,7 +50,7 @@ export const UserContextProvider = ({ children }: { children: ReactNode }): Reac
 				});
 			}
 		} catch (e: unknown) {
-			handleError(e);
+			handleError(e, toast);
 			setLogout();
 		}
 	};

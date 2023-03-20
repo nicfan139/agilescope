@@ -1,4 +1,4 @@
-import { useToast } from '@chakra-ui/react';
+import { CreateToastFnReturn } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 
 export const getAccessToken = () => {
@@ -19,8 +19,7 @@ export const handleLogout = () => {
 	}
 };
 
-export const handleError = (e: unknown) => {
-	const toast = useToast();
+export const handleError = (e: unknown, toast: CreateToastFnReturn) => {
 	const error = e as AxiosError;
 	const data = error.response?.data as { errorMessage: string };
 	toast({

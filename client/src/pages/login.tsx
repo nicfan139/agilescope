@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { CheckCircleIcon } from '@chakra-ui/icons';
 import { LayoutCenter } from '@/components';
+import { LOGIN_BACKGROUND } from '@/constants/background';
 import { handleError } from '@/helpers';
 import { useAuthLogin, useAuthValidateOtp } from '@/hooks';
 
@@ -69,7 +70,7 @@ const LoginPage = ({}: PageProps): React.ReactElement => {
 				});
 			}
 		} catch (e: unknown) {
-			handleError(e);
+			handleError(e, toast);
 		}
 	};
 
@@ -88,12 +89,12 @@ const LoginPage = ({}: PageProps): React.ReactElement => {
 				});
 			}
 		} catch (e: unknown) {
-			handleError(e);
+			handleError(e, toast);
 		}
 	};
 
 	return (
-		<LayoutCenter backgroundColor="whitesmoke">
+		<LayoutCenter backgroundColor="whitesmoke" backgroundImage={LOGIN_BACKGROUND}>
 			<Box p="1.5rem" w="full" maxW="lg" backgroundColor="white" boxShadow="lg">
 				<Heading as="h1" size="xl" mb="1.5rem">
 					Login to AgileScope

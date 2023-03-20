@@ -85,7 +85,7 @@ const TeamForm = ({ isOpen, onClose, team }: ITeamFormProps): React.ReactElement
 					});
 				}
 			} catch (e: unknown) {
-				handleError(e);
+				handleError(e, toast);
 			}
 		}
 	};

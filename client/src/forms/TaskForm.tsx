@@ -145,7 +145,7 @@ const TaskForm = ({ isOpen, onClose, task }: ITaskFormProps): React.ReactElement
 				});
 			}
 		} catch (e: unknown) {
-			handleError(e);
+			handleError(e, toast);
 		}
 	};
 
